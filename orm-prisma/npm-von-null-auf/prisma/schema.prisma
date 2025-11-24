@@ -10,3 +10,43 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+
+model Member {
+  id Int @id @default(autoincrement())
+  email String 
+  first_name String
+  last_name String
+  passwort String?
+}
+
+model Course {
+  id  Int @id @default(autoincrement())
+  name  String
+  assigments Assigment[]
+}
+
+model Assigment {
+  id Int @id @default(autoincrement())
+  name String
+  description String?
+  course_id Int
+  course  Course @relation(fields: [course_id], references: [id])
+}
+
+model Template {
+  id Int @id @default(autoincrement())
+  name String
+  description String
+}
+
+model Teacher {
+  id Int @id @default(autoincrement())
+  first_name String
+  last_name String
+}
+
+model Student {
+  id Int @id @default(autoincrement())
+  first_name String
+  last_name String
+}
