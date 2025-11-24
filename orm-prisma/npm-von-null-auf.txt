@@ -1,0 +1,11 @@
+mkdir npm-von-null-auf && cd npm-von-null-auf && \
+# init npm
+npm init -y && \
+# setzt typ auf modul
+npm pkg set type=module && \
+# instaliert die version 6.19.0 da 7.0 zu dieser zeit Bug hat, -D development
+npm install -D prisma@6.19.0 && \
+# instaliert den client fuer alle
+npm install @prisma/client@6.19.0 dotenv && \
+# setzt db auf sqlite und generator auf js
+npx prisma init --datasource-provider sqlite --generator-provider prisma-client-js
