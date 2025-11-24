@@ -9,4 +9,4 @@ Dazu kommen noch:
  - ERD unsere Wahl kann mitgenommen werden (MUSS LESERLICH SEIN UND NORMGERECHT GEFALLTET) 
  - Stichworte zur Normalisieren (siehe 1,2,3)
  
-Stoff bis inclusive Trigger
+Stoff bis inclusive Trigger (indizes, contraints, trigger)
