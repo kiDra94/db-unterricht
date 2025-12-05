@@ -1,0 +1,4 @@
+- npm aufsetzen+prisma instalieren und entities modelieren für 4
+- entities richtig in prisma machen für 3
+- Vererbung richtig für 2
+- irgend eine Doku lesen für 1

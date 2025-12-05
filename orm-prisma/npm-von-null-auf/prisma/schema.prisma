@@ -17,6 +17,20 @@ model Member {
   first_name String
   last_name String
   passwort String?
+  teachers Teacher?
+  students Student?
+}
+
+model Teacher {
+  member Member @relation(fields: [id], references: [id])
+  id Int @id 
+  can_assigne_assigment Boolean
+}
+
+model Student {
+  member Member @relation(fields: [id], references: [id])
+  id Int @id
+  grade Int
 }
 
 model Course {
@@ -39,14 +53,3 @@ model Template {
   description String
 }
 
-model Teacher {
-  id Int @id @default(autoincrement())
-  first_name String
-  last_name String
-}
-
-model Student {
-  id Int @id @default(autoincrement())
-  first_name String
-  last_name String
-}
