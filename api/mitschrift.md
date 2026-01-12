@@ -45,4 +45,4 @@ npm i @nestjs/swagger
 
 ### WICHTIG
 
-Bei der REST API immer PUT, PATCH, GET, DELETE. Die Endpoints sind immer gleich /[name]/[id].
+Bei der REST API immer POST, PATCH, GET, DELETE. Die Endpoints sind immer gleich /[name]/[id].
