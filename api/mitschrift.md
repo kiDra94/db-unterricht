@@ -42,3 +42,7 @@ Einer der Vorteile waere das ErrorHandling. und das benutzen von prisma in dem s
 ```bash
 npm i @nestjs/swagger
 ```
+
+### WICHTIG
+
+Bei der REST API immer PUT, PATCH, GET, DELETE. Die Endpoints sind immer gleich /[name]/[id].
