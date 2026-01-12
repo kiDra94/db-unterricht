@@ -1,7 +1,7 @@
 Erster Schritt:
 ```bash
     npm i -g @nestjs/cli
-    nest # cli von nest starten
+    nest # cli von nest starten um zu schauen welche optionen wir haben
     nest new classroom # eine neue nest application wird gestartet
     # npm auswaehlen
     cd clasroom
