@@ -46,3 +46,11 @@ npm i @nestjs/swagger
 ### WICHTIG
 
 Bei der REST API immer POST, PATCH, GET, DELETE. Die Endpoints sind immer gleich /[name]/[id].
+dto --> steht fuer Data Transfer Object, ist das was ueber die API geschickt wird. Man kann das von der AXIOS geschickte JSON vorher validieren.
+
+# Aufgabe bis nachste Woche
+
+model Member wie im Bsp
+
+model Course: id, name, members[] --> implementieren als PrismaSchema
+dto anshcuen!
