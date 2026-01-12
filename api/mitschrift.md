@@ -40,5 +40,5 @@ Der Prisma client wird benutzt um den findall anzupassen.
 Einer der Vorteile waere das ErrorHandling. und das benutzen von prisma in dem service.
 
 ```bash
-npm i @nestjs/swagger'
+npm i @nestjs/swagger
 ```
