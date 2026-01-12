@@ -36,3 +36,4 @@ nest g mo prisma # modul wird erzeugt
 nest g s prisma # service wird erzeugt
 npm i @prisma/adapter-better-sqlite3 # wird gebruacht wuer den service
 ```
+Der Prisma client wird benutzt um den findall anzupassen.
