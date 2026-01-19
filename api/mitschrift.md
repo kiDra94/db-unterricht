@@ -59,3 +59,8 @@ dto anshcuen!
 file:///home/drazen/htl/3/db/unterricht/api/classrome/dist/generated/prisma/client.js:38
 Object.defineProperty(exports, "__esModule", { value: true });
 `moduleFormat = "cjs"` in schema.prisma beim client hinzufuegen und neu generieren mit `npx prisma generate`, dannach last sich der nest server wieder mit `npm run start` starten.
+
+### Packet fuer die dto
+```bash
+npm install class-validator class-transformer
+```
