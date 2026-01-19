@@ -1,0 +1,1 @@
+fuer alle Modele aus dem Prisma alle Entities mit nestJS machen!
