@@ -2,7 +2,7 @@ Erster Schritt:
 ```bash
 npm i -g @nestjs/cli
 nest # cli von nest starten um zu schauen welche optionen wir haben
-nest new classroom # eine neue nest application wird gestartet
+nest new backend --skip-git # eine neue nest application wird gestartet ohne git!
 # npm auswaehlen
 cd clasroom
 nest start
