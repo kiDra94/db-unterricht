@@ -32,3 +32,16 @@ Nach dem ueberpruefen ob das username und password gleich sind
 apisec on  main [!] via  v22.15.0 
 ❯ curl -u drazen:pass123 http://localhost:3000/
 {"message":"Invalid credentials","error":"Unauthorized","statusCode":401}
+
+### Aufgabe den bisherigen code als guard machen
+
+der Guard nur auf die getHello:
+❯ curl http://localhost:3000/
+{"message":"Missing Basic authorization header","error":"Unauthorized","statusCode":401}
+unterricht on  main [!?] 
+❯ 
+❯ curl http://localhost:3000/code
+Code
+unterricht on  main [!?] 
+❯ 
+
