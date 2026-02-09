@@ -1,5 +1,8 @@
 /* eslint-disable prettier/prettier */
-export class BasicStrategy {
+import { PassportStrategy } from "@nestjs/passport"
+
+
+export class BasicStrategy extends PassportStrategy {
     constructor() {
         
     }
