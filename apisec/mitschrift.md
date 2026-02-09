@@ -39,11 +39,10 @@ der Guard nur auf die getHello:
 ❯ curl http://localhost:3000/
 {"message":"Missing Basic authorization header","error":"Unauthorized","statusCode":401}
 unterricht on  main [!?] 
-❯ 
+
 ❯ curl http://localhost:3000/code
 Code
 unterricht on  main [!?] 
-❯ 
 
 der Guard auf den ganzen Controller:
 ❯ curl http://localhost:3000/code
@@ -52,4 +51,11 @@ unterricht on  main [!⇡]
 ❯ curl http://localhost:3000/
 {"message":"Missing Basic authorization header","error":"Unauthorized","statusCode":401}
 unterricht on  main [!⇡] 
-❯ 
+
+mit richtigem user und passwort:
+❯ curl -u user:secret http://localhost:3000/
+Hello World!
+unterricht on  main 
+❯ curl -u user:secret http://localhost:3000/code
+Code
+unterricht on  main 
