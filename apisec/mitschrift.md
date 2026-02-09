@@ -11,3 +11,8 @@ extends ist die Erbeung. BasicStrategy erebt von PassportStrategy.
 
 HTTPBasicStrategy hat schon fertige Methoden die den header ueberpruefen und username und passwort spliten, so das wir es benutzen koennen!
 
+Proof: 
+❯ curl http://localhost:3000{"message":"Unauthorized","statusCode":401}
+unterricht/apisec on  passport [!] via  v22.15.0 
+❯ curl -u user:secret http://localhost:3000
+Hello World!
