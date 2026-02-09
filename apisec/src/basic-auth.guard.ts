@@ -6,6 +6,8 @@
 import { CanActivate, ExecutionContext, UnauthorizedException } from "@nestjs/common";
 
 export class ApiKeyGuard implements CanActivate {
+    private readonly validUsername = 'user';
+    private readonly validPassword = 'secret';
     canActivate(context: ExecutionContext): boolean {
         const request = context.switchToHttp().getRequest();
 
@@ -20,7 +22,7 @@ export class ApiKeyGuard implements CanActivate {
         const [username, password] = credentials.split(':');
         console.log('Username:', username);
         console.log('Password:', password);
-        if (username !== 'user' || password !== 'secret') {
+        if (username !== this.validUsername || password !== this.validPassword) {
             throw new UnauthorizedException('Invalid credentials');
         }
         return true;
