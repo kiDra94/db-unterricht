@@ -3,7 +3,7 @@
 /* eslint-disable prettier/prettier */
 import { UnauthorizedException } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport"
-import { BasicStragey as HTTPBasicStrategy } from "passport-http";
+import { BasicStrategy as HTTPBasicStrategy } from "passport-http";
 
 
 export class BasicStrategy extends PassportStrategy(HTTPBasicStrategy) {
