@@ -8,3 +8,6 @@ Ein Interface ist eine Liste von Methoden die es gebne muss.
 Eine Abstrakte Klasse hat eine construcotr (im gegensatz vom Intreface was keins hat).
 
 extends ist die Erbeung. BasicStrategy erebt von PassportStrategy.
+
+HTTPBasicStrategy hat schon fertige Methoden die den header ueberpruefen und username und passwort spliten, so das wir es benutzen koennen!
+
