@@ -16,3 +16,8 @@ Proof:
 unterricht/apisec on  passport [!] via  v22.15.0 
 ❯ curl -u user:secret http://localhost:3000
 Hello World!
+
+Req wird benutzt damit wir req daten abspeichern koennen in z.B. Coockies.
+unterricht/apisec on  passport via  v22.15.0 
+❯ curl -u user:secret http://localhost:3000
+{"message":"Hello World!","user":{"username":"user"}}
