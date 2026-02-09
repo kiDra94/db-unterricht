@@ -45,3 +45,11 @@ Code
 unterricht on  main [!?] 
 ❯ 
 
+der Guard auf den ganzen Controller:
+❯ curl http://localhost:3000/code
+{"message":"Missing Basic authorization header","error":"Unauthorized","statusCode":401}
+unterricht on  main [!⇡] 
+❯ curl http://localhost:3000/
+{"message":"Missing Basic authorization header","error":"Unauthorized","statusCode":401}
+unterricht on  main [!⇡] 
+❯ 
