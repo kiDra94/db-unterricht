@@ -59,4 +59,4 @@ class ResourceServer:
             return "YOU ARE WORTHY"
         return "YOU ARE NOT WORTHY"
 
-#TODO: ab 3. weitermachen das ist das umleiten zum authserver
+#TODO: funktionen implemntieren
