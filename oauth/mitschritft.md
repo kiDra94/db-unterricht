@@ -15,4 +15,5 @@ Schriite:
 - .json von dem client herunterladen und die benoetigten daten in die .env
 - npm i @nestjs/config, app module config module importieren 
 
-Die config module ladet die .env
+Die config module ladet die .env.
+Injecteble ist ein Iterface fuer eine Klasse
