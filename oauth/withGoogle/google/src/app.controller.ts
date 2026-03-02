@@ -7,6 +7,7 @@ export class AppController {
 
   @Get()
   getHello(): string {
+    console.log('Client ID ' + process.env.CLIENT_ID);
     return this.appService.getHello();
   }
 }
