@@ -5,6 +5,8 @@ class ResourceOwner:
         print("Anfrage an UserAgent gesendet!")
         return self.userAgent.getResource()
     def eingabeAuth(self):
+        username = 'admin'
+        password = 'admin'
         pass
     def print_ausgabe(self):
         pass
