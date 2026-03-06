@@ -6,7 +6,7 @@ import { Strategy } from "passport-google-oauth20"
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') { // PassportStrategy eine funktion die eine klasse zurueck gibt
     constructor() {
         super({
-            cleintID: process.env.CLIENT_ID,
+            clientID: process.env.CLIENT_ID,
             clientSecet: process.env.CLIENT_SECRET,
             callbackURL: process.env.CALLBACK_URL,
             scope: ['openid', 'email', 'profile'] // siehe docs von google was es so alles noch geben kann
