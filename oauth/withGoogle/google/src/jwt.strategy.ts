@@ -8,7 +8,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     constructor(private readonly) {
         super({
             jwtFromRequest: (req: Request) => {
-                let token = ExtractJwt.fromAuthHeaderAsBearerToken();
+                let token = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
                 if(!token && req.cookies) {
                     token = req.cookies.accesToken;
                 }
