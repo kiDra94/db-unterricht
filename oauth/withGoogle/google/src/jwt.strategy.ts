@@ -5,7 +5,12 @@ import { Strategy } from "passport-jwt";
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
     constructor(private readonly) {
-        super();
+        super({
+            jwtFromRequest: (req: Request) => {
+                return token;
+            },
+            secretOrKey: process.env.JWT_SECRET || 'fallback-secret',
+        });
     }
 
     async validate() {
