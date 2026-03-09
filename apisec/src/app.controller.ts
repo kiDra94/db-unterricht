@@ -1,19 +1,19 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { AppService } from './app.service';
-import { ApiKeyGuard } from './basic-auth.guard';
+import { AuthGuard } from '@nestjs/passport'; // unterstützt die Verwendung von Passport-Strategi Guards
 
-@UseGuards(ApiKeyGuard)
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
+  @UseGuards(AuthGuard('basic')) // AuthGuard mit der 'basic' Strategie verwenden
   @Get()
-  getHello(): string {
-    return this.appService.getHello();
-  }
-
-  @Get('/code')
-  getCode(): string {
-    return 'Code';
+  getHello(@Req() req) {
+    return {
+      message: this.appService.getHello(),
+      user: req.user, // Zugriff auf die Benutzerdaten, die von der Strategie zurückgegeben werden
+    };
   }
 }

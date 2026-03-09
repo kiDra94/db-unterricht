@@ -1,11 +1,14 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { BasicStrategy } from './basic.strategy';
+import { ConfigModule } from '@nestjs/config'
+import { GoogleStrategy } from './google.strategy';
 
 @Module({
-  imports: [],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true })
+  ],
   controllers: [AppController],
-  providers: [AppService, BasicStrategy],
+  providers: [AppService, GoogleStrategy],
 })
 export class AppModule {}
