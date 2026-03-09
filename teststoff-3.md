@@ -1,0 +1,13 @@
+- Api mit nest ungesichert aufsetzen:
+    - wissen wie die API funktiniert
+- Grob wissen wie man mit dem nest sachen umgeht:
+    - injectabels
+    - strageys
+    - decorator
+- Securty von der therie wissen:
+    - welche methoden es gibt
+    - welche wo angewendet wird
+- Ablauf:
+    - Fragen am Zettel
+    - keine Eigenen Zettle
+    - kein praktischer Teil am PC
