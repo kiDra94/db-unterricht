@@ -34,9 +34,10 @@ export class AppController {
     res.redirect('/hello');
   }
 
-  @Get()
-  getHello(): string {
-    console.log('Client ID ' + process.env.CLIENT_ID);
-    return this.appService.getHello();
+  @Get('hello')
+  @UseGuards(AuthGuard('jwt'))
+  getHello(@Req() req): string {
+    console.log('Client ID ' + process.env.CLIENT_ID + req.user.email);
+    return this.appService.getHello(req);
   }
 }
