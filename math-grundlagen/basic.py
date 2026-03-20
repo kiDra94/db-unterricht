@@ -1,0 +1,51 @@
+import re
+
+
+A = {1, 2, 3} # variable ist gross da es eine Menge ist, ist ein SET
+
+print(A)
+
+B = set([1, 2, 2, 3,])
+print(B)
+
+C = [1, 2, 2, 3] # eine Liste ist keine Menge da Elemente doppelt drinnen sind
+print(C)
+
+B = {a for a in range(50) if a % 2 == 0} # das ist eine Komprehensation
+print(B)
+
+# Eigenes SET
+from pprint import pprint
+
+class MengeGenerell:
+    def __init__(self) -> None:
+        self.__data = []
+
+    def __contains__(self, x): # die __contains__ kann spaeter mit 'in' aufgerufen werden z.B. 1 in Menge
+        for _x in self.__data:
+            if x == _x:
+                return True
+        return False
+
+class MengeNamen:
+    def __init__(self) -> None:
+        self.__data= [None]*26
+
+    def add(self, item):
+        idx = self.hash(item)
+        if not self.__data[idx]:
+            self.__data[idx] = []
+        self.__data[idx].append(item)
+        pprint(self.__data)
+
+    def hash(self, item): # Hashfunktion nimmt einen wert und gibt einen numerischen wert zurueck
+        return (ord(item[0].upper()) - ord('A')) % 26 # in ASCII umwandeln - offset von A % 26 damit Oetzie platz hat
+
+m = MengeNamen()
+
+m.add("Anton")
+m.add("Albert")
+m.add("Alina")
+m.add("Robert")
+m.add("Martin")
+m.add("Ötzie")
