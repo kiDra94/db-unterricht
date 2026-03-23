@@ -26,7 +26,7 @@
 	- **Projektionsoperator Pi**
 	Sei I die Indexmenge {1, 2, ..., n} dann ist $$\pi_I(R) := \{ (a_i \mid i \in I) \mid a \in R \}$$
 
-		BSP: $$pi_1(personen) = \{"Max", "Erika"\}$$
+		BSP: $$pi_1(personen) = \{ (1, \text{"Max"}, \text{"Mustermann"}), (2, \text{"Erika"}, \text{"Musterfrau"}) \}$$
 	Der Index **i** ist die **Columns** und die **personen** ist die **Table**.
 
 
