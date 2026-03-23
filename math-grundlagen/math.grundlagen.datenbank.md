@@ -18,5 +18,17 @@
 		- Menge == Zusammenfügen, d.h. Gruppierung nach Eigenschaften. z.B. $$\forall a: a \in A \leftrightarrow \mathcal{E}(a)$$	
 		- Komprehensation: Menge B = alle a für gewisse eigenschaften gelten. z.B. "gerade Zahlen". $$B = \{x \mid x \in \mathbb{N} \land x \bmod 2 \equiv 0\}$$
 ### Kartesische Produkt
-- Das Kreuzprodukt (jedes mit jedem wird kombiniert).$$A \times B := \{(a,b) \mid a \in A,\; b \in B\}$$ allgemein $$f: A \to B \land (\forall a \in A)(\exists! b \in B)(f(a) = b)$$
-- 
+- **Das Kreuzprodukt** (jedes mit jedem wird kombiniert).$$A \times B := \{(a,b) \mid a \in A,\; b \in B\}$$ allgemein $$f: A \to B \land (\forall a \in A)(\exists! b \in B)(f(a) = b)$$
+- **Relation**
+	- eine Relation ist eine echte **Teilmenge** aus dem kart. Produkt von **n-Mengen**. $$R \subseteq A \times A \times \dots \times A$$
+	Bsp. Menge A1 = {1, 2, 3, 4} Menge B = {a, b, c} -> R ist eine Teilmenge aus {(1, a), (2, a), (3, a), (4, a), (1, b), ... , (4, c)}.
+	Bsp. einer relation ```{"personen": {(1, "Max", "Musterman"), (2, "Erika", "Musterfrau")}```
+	- **Projektionsoperator Pi**
+	Sei I die Indexmenge {1, 2, ..., n} dann ist $$\pi_i(R) = \{a_i \in \mathcal C \mid c \in R\}$$
+	das oben ist falsch noch ausbessern!! 
+
+		BSP: $$pi_1(personen) = \{"Max", "Erika"\}$$
+	Der Index **i** ist die **Columns** und die **personen** ist die **Table**.
+
+
+	

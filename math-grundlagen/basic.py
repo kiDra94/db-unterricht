@@ -3,16 +3,16 @@ import re
 
 A = {1, 2, 3} # variable ist gross da es eine Menge ist, ist ein SET
 
-print(A)
+# print(A)
 
 B = set([1, 2, 2, 3,])
-print(B)
+# print(B)
 
 C = [1, 2, 2, 3] # eine Liste ist keine Menge da Elemente doppelt drinnen sind
-print(C)
+# print(C)
 
 B = {a for a in range(50) if a % 2 == 0} # das ist eine Komprehensation
-print(B)
+# print(B)
 
 # Eigenes SET
 from pprint import pprint
@@ -36,7 +36,7 @@ class MengeNamen:
         if not self.__data[idx]:
             self.__data[idx] = []
         self.__data[idx].append(item)
-        pprint(self.__data)
+        # pprint(self.__data)
 
     def hash(self, item): # Hashfunktion nimmt einen wert und gibt einen numerischen wert zurueck
         return (ord(item[0].upper()) - ord('A')) % 26 # in ASCII umwandeln - offset von A % 26 damit Oetzie platz hat
@@ -55,4 +55,26 @@ m.add("Ötzie")
 A = range(1, 5)
 B = 'a b c d e f g j k l'.split()
 AxB = { (a, b) for a in A for b in B}
-pprint(AxB)
+# pprint(AxB)
+
+#Relation & Projektionsoperator
+
+class RelationalAlgebra:
+    def __init__(self, relations):
+        self.__rs = relations
+
+    def projektionsoperator(self, *I): #*I ist Tupel unpacking
+        def _(R):
+            for row in self.__rs[R]:
+                result = []
+                for i in I:
+                    result.append(row[i])
+                yield result
+        return _
+
+ra = RelationalAlgebra({
+    "personen": {(1, "Max", "Musterman"), (2, "Erika", "Musterfrau")}
+})
+
+for row in ra.projektionsoperator(1, 0)("personen"):
+    pprint(row)
