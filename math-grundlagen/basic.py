@@ -29,7 +29,7 @@ class MengeGenerell:
 
 class MengeNamen:
     def __init__(self) -> None:
-        self.__data= [None]*26
+        self.__data = [None]*26
 
     def add(self, item):
         idx = self.hash(item)

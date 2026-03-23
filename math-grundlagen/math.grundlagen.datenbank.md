@@ -17,4 +17,3 @@
 		- Aufzählend: z.B. {a, b, c}
 		- Menge == Zusammenfügen, d.h. Gruppierung nach Eigenschaften. z.B. $$\forall a: a \in A \leftrightarrow \mathcal{E}(a)$$	
 		- Komprehensation: Menge B = alle a für gewisse eigenschaften gelten. z.B. "gerade Zahlen". $$B = \{x \mid x \in \mathbb{N} \land x \bmod 2 \equiv 0\}$$
-		
