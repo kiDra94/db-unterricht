@@ -17,3 +17,6 @@
 		- Aufzählend: z.B. {a, b, c}
 		- Menge == Zusammenfügen, d.h. Gruppierung nach Eigenschaften. z.B. $$\forall a: a \in A \leftrightarrow \mathcal{E}(a)$$	
 		- Komprehensation: Menge B = alle a für gewisse eigenschaften gelten. z.B. "gerade Zahlen". $$B = \{x \mid x \in \mathbb{N} \land x \bmod 2 \equiv 0\}$$
+### Kartesische Produkt
+- Das Kreuzprodukt (jedes mit jedem wird kombiniert).$$A \times B := \{(a,b) \mid a \in A,\; b \in B\}$$ allgemein $$f: A \to B \land (\forall a \in A)(\exists! b \in B)(f(a) = b)$$
+- 

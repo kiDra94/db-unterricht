@@ -49,3 +49,10 @@ m.add("Alina")
 m.add("Robert")
 m.add("Martin")
 m.add("Ötzie")
+
+
+# Kreuzprodukt
+A = range(1, 5)
+B = 'a b c d e f g j k l'.split()
+AxB = { (a, b) for a in A for b in B}
+pprint(AxB)
