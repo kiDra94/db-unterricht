@@ -22,7 +22,7 @@
 - **Relation**
 	- eine Relation ist eine echte **Teilmenge** aus dem kart. Produkt von **n-Mengen**. $$R \subseteq A \times A \times \dots \times A$$
 	Bsp. Menge A1 = {1, 2, 3, 4} Menge B = {a, b, c} -> R ist eine Teilmenge aus {(1, a), (2, a), (3, a), (4, a), (1, b), ... , (4, c)}.
-	Bsp. einer relation ```{"personen": {(1, "Max", "Musterman"), (2, "Erika", "Musterfrau")}```
+	Bsp. einer Relation ```{"personen": {(1, "Max", "Musterman"), (2, "Erika", "Musterfrau")}```
 	- **Projektionsoperator Pi**
 	Sei I die Indexmenge {1, 2, ..., n} dann ist $$\pi_I(R) := \{ (a_i \mid i \in I) \mid a \in R \}$$
 
