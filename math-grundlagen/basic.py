@@ -76,3 +76,5 @@ for row in ra.projektionsoperator(0, 1, 2)("personen"):
     # 1 ist 2. Spalte also Vorname 
     # 3. Spalte alse Nachname
     pprint(row)
+
+#TODO: das where selber schreiben es hat 2 parameter, das predikat und die relation
