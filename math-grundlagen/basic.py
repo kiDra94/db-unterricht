@@ -65,16 +65,14 @@ class RelationalAlgebra:
 
     def projektionsoperator(self, *I): #*I ist Tupel unpacking
         def _(R):
-            for row in self.__rs[R]:
-                result = []
-                for i in I:
-                    result.append(row[i])
-                yield result
+            yield from (tuple(row[i] for i in I) for row in self.__rs[R])
         return _
-
 ra = RelationalAlgebra({
     "personen": {(1, "Max", "Musterman"), (2, "Erika", "Musterfrau")}
 })
 
-for row in ra.projektionsoperator(1, 0)("personen"):
+for row in ra.projektionsoperator(0, 1, 2)("personen"): 
+    # 0 ist erste Spalte alse ID, 
+    # 1 ist 2. Spalte also Vorname 
+    # 3. Spalte alse Nachname
     pprint(row)
