@@ -94,3 +94,12 @@ ra = RelationalAlgebra({
 
 for row in ra.selectionoperator(lambda row: row[3] == "w")("personen"):
     pprint(row)
+
+# partiale Applikation
+def gender(g):
+    def _(row):
+        return row[3] in g
+    return _
+
+for row in ra.selectionoperator(gender("m"))("personen"):
+    pprint(row)
