@@ -49,3 +49,14 @@ Beide Zusammen aber das doppelte kommt nur einmal vor.
  UNION
  select ...
  ```
+
+### Differenz
+$$ R \setminus S := \{\, t \mid t \in R,\; t \notin S \,\} $$
+
+```sql
+select ...
+MINUS / EXCEPT
+select ...
+```
+
+MINUS oder EXCEPT hängt von dem SQL Typen aus.

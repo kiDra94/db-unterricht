@@ -84,6 +84,11 @@ class RelationalAlgebra:
             if s not in seen:
                 yield s
 
+    def minus_except(self, R, S):
+        for r in self.__rs[R]:
+            if r not in self.__rs[S]:
+                yield r
+
 ra = RelationalAlgebra({
     "personen": {
         (1, "Max", "Musterman", "m"), 
@@ -126,5 +131,8 @@ is_femaile = lambda row: row[3] == "w"
 # for row in ra.selectionoperator(is_femaile)("personen"):
 #     pprint(row)
 
-for row in ra.union("personen", "hobbys"):
+# for row in ra.union("personen", "hobbys"):
+#     pprint(row)
+
+for row in ra.minus_except("personen", "hobbys"):
     pprint(row)
