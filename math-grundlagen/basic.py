@@ -61,43 +61,46 @@ AxB = { (a, b) for a in A for b in B}
 
 class RelationalAlgebra:
     def __init__(self, relations):
-        self.__rs = relations
+        self.rs = relations
 
     # projektion : pi_I(R) = { (a_i | i in I) forall row in R }
     def projektionsoperator(self, *I): #*I ist Tupel unpacking | SQL wuerde das SELECT FROM nennen
         def _(R):
-            yield from (tuple(row[i] for i in I) for row in self.__rs[R])
+            yield from (tuple(row[i] for i in I) for row in self.rs[R])
         return _
 
     # selection : sigma_p(R) = { r forall row in R if p(row) }
     def selectionoperator(self, p):
         def _(R):
-            yield from (row for row in self.__rs[R] if p(row))
+            yield from (row for row in self.rs[R] if p(row))
         return _
 
     def union(self, R, S):
-        return self.__rs[R] | self.__rs[S]
+        return self.rs[R] | self.rs[S]
         # seen = set()
-        # for r in self.__rs[R]:
+        # for r in self.rs[R]:
         #     seen.add(r)
         #     yield r
-        # for s in self.__rs[S]:
+        # for s in self.rs[S]:
         #     if s not in seen:
         #         yield s
 
 
     def minus_except(self, R, S):
-        return self.__rs[R] - self.__rs[S]
-        # for r in self.__rs[R]:
-        #     if r not in self.__rs[S]:
+        return self.rs[R] - self.rs[S]
+        # for r in self.rs[R]:
+        #     if r not in self.rs[S]:
         #         yield r
+
+    def kreuzprodukt(self, R, S):
+        return { (*r, *s) for r in self.rs[R] for s in self.rs[S] }
 
 ra = RelationalAlgebra({
     "personen": {
-        (1, "Max", "Musterman", "m"), 
-        (2, "Erika", "Musterfrau", "w"),
-        (3, "Otto", "Normalverbraucher", "m"),
-        (4, "Anna", "Musterfrau", "w"),
+        (1, "Max", "Musterman", "m", 1), 
+        (2, "Erika", "Musterfrau", "w", 2),
+        (3, "Otto", "Normalverbraucher", "m", 1),
+        (4, "Anna", "Musterfrau", "w", 2),
         },
     "hobbys": {
         (1, "Fußball"),
@@ -137,5 +140,10 @@ is_femaile = lambda row: row[3] == "w"
 # for row in ra.union("personen", "hobbys"):
 #     pprint(row)
 
-for row in ra.minus_except("personen", "hobbys"):
+# for row in ra.kreuzprodukt("personen", "hobbys"):
+#     pprint(row)
+
+# der JOIN ist ein kreuzprodukt gefolgt von einer Selektion (dem WHERE)
+ra.rs["personen_hobbys"] = ra.kreuzprodukt("personen", "hobbys")
+for row in ra.selectionoperator(lambda row: row[4] == row[5])("personen_hobbys"):
     pprint(row)

@@ -60,3 +60,9 @@ select ...
 ```
 
 MINUS oder EXCEPT hängt von dem SQL Typen aus.
+
+### Joins
+$$ R \bowtie_{\varphi} S := \sigma_{\varphi}(R \times S) $$
+$$ (r,s) \mid r \in R, s \in S, \varphi(r,s)$$
+
+Ein Join ist ein **KREUZPRODUKT** mit einem predikat (dem Kriterium bzw. der WHERE Bedingung).
