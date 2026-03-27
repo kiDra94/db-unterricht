@@ -63,6 +63,7 @@ class RelationalAlgebra:
     def __init__(self, relations):
         self.__rs = relations
 
+    # projektion : pi_I(R) = { (a_i | i in I) forall row in R }
     def projektionsoperator(self, *I): #*I ist Tupel unpacking | SQL wuerde das SELECT FROM nennen
         def _(R):
             yield from (tuple(row[i] for i in I) for row in self.__rs[R])
