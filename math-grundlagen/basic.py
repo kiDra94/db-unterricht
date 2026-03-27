@@ -68,6 +68,13 @@ class RelationalAlgebra:
         def _(R):
             yield from (tuple(row[i] for i in I) for row in self.__rs[R])
         return _
+
+    # selection : sigma_p(R) = { r forall row in R if p(row) }
+    def selectionoperator(self, p):
+        def _(R):
+            yield from (row for R in self.__rs[R] if p(row))
+        return _
+
 ra = RelationalAlgebra({
     "personen": {(1, "Max", "Musterman"), (2, "Erika", "Musterfrau")}
 })
@@ -80,4 +87,3 @@ for row in ra.projektionsoperator(0, 1, 2)("personen"):
 
 # das gleichewie for result in cursor.fetchall(): print(result)
 
-#TODO: das where selber schreiben es hat 2 parameter, das predikat und die relation
