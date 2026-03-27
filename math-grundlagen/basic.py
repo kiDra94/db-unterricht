@@ -76,14 +76,21 @@ class RelationalAlgebra:
         return _
 
 ra = RelationalAlgebra({
-    "personen": {(1, "Max", "Musterman"), (2, "Erika", "Musterfrau")}
+    "personen": {
+        (1, "Max", "Musterman", "m"), 
+        (2, "Erika", "Musterfrau", "w"),
+        (3, "Otto", "Normalverbraucher", "m"),
+        (4, "Anna", "Musterfrau", "w"),
+        }
 })
 
-for row in ra.projektionsoperator(0, 1, 2)("personen"): 
-    # 0 ist erste Spalte alse ID, 
-    # 1 ist 2. Spalte also Vorname 
-    # 3. Spalte alse Nachname
-    pprint(row)
+# for row in ra.projektionsoperator(0, 1, 2)("personen"): 
+#     # 0 ist erste Spalte alse ID, 
+#     # 1 ist 2. Spalte also Vorname 
+#     # 3. Spalte alse Nachname
+#     pprint(row)
 
 # das gleichewie for result in cursor.fetchall(): print(result)
 
+for row in ra.selectionoperator(lambda row: row[3] == "w")("personen"):
+    pprint(row)
