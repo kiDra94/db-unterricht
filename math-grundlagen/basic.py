@@ -77,4 +77,6 @@ for row in ra.projektionsoperator(0, 1, 2)("personen"):
     # 3. Spalte alse Nachname
     pprint(row)
 
+# das gleichewie for result in cursor.fetchall(): print(result)
+
 #TODO: das where selber schreiben es hat 2 parameter, das predikat und die relation
