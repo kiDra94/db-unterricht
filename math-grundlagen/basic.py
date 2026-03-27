@@ -75,13 +75,26 @@ class RelationalAlgebra:
             yield from (row for row in self.__rs[R] if p(row))
         return _
 
+    def union(self, R, S):
+        seen = set()
+        for r in self.__rs[R]:
+            seen.add(r)
+            yield r
+        for s in self.__rs[S]:
+            if s not in seen:
+                yield s
+
 ra = RelationalAlgebra({
     "personen": {
         (1, "Max", "Musterman", "m"), 
         (2, "Erika", "Musterfrau", "w"),
         (3, "Otto", "Normalverbraucher", "m"),
         (4, "Anna", "Musterfrau", "w"),
-        }
+        },
+    "hobbys": {
+        (1, "Fußball"),
+        (2, "Volleyball"),
+        },
 })
 
 # for row in ra.projektionsoperator(0, 1, 2)("personen"): 
@@ -92,8 +105,8 @@ ra = RelationalAlgebra({
 
 # das gleichewie for result in cursor.fetchall(): print(result)
 
-for row in ra.selectionoperator(lambda row: row[3] == "w")("personen"):
-    pprint(row)
+# for row in ra.selectionoperator(lambda row: row[3] == "w")("personen"):
+#     pprint(row)
 
 # partiale Applikation
 def gender(g):
@@ -107,8 +120,11 @@ def gender(g):
 is_male = lambda row: row[3] == "m"
 is_femaile = lambda row: row[3] == "w"
 
-for row in ra.selectionoperator(gender("m"))("personen"):
-    pprint(row)
+# for row in ra.selectionoperator(gender("m"))("personen"):
+#     pprint(row)
 
-for row in ra.selectionoperator(is_femaile)("personen"):
+# for row in ra.selectionoperator(is_femaile)("personen"):
+#     pprint(row)
+
+for row in ra.union("personen", "hobbys"):
     pprint(row)

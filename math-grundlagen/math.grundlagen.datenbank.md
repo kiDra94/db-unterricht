@@ -34,4 +34,9 @@
 	$$\sigma_{t[0] > 1}(\text{Personen}):$$
 	(1, {"Max"}, {"Mustermann"})
 	(2, {"Erika"}, {"Musterfrau"}) -> das t ist das Tupel also kommt nur der Datensatz von der Erika da and der stelle [0] vom Tupel die id 2 > 1 ist, in SQL nennen wir es **WHERE**.
-### 
+
+### Vereinungsoperator (Union)
+
+$$ R \cup S := \{ t \mid t \in R \cup t \in S \} $$
+
+Beide Zusammen aber das doppelte kommt nur einmal vor.
