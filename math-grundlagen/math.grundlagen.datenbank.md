@@ -40,3 +40,12 @@
 $$ R \cup S := \{ t \mid t \in R \cup t \in S \} $$
 
 Beide Zusammen aber das doppelte kommt nur einmal vor.
+
+ **ACHTUNG R UND S MÜSSEN KOMPATIBEL SEIN**
+
+ In SQL:
+ ```sql
+ select ...
+ UNION
+ select ...
+ ```
