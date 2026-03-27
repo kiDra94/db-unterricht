@@ -101,8 +101,11 @@ def gender(g):
         return row[3] in g
     return _
 
-is_male = gender("m")
-is_femaile = gender("wf")
+# is_male = gender("m")
+# is_femaile = gender("wf")
+
+is_male = lambda row: row[3] == "m"
+is_femaile = lambda row: row[3] == "w"
 
 for row in ra.selectionoperator(gender("m"))("personen"):
     pprint(row)
