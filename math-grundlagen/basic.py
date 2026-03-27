@@ -72,7 +72,7 @@ class RelationalAlgebra:
     # selection : sigma_p(R) = { r forall row in R if p(row) }
     def selectionoperator(self, p):
         def _(R):
-            yield from (row for R in self.__rs[R] if p(row))
+            yield from (row for row in self.__rs[R] if p(row))
         return _
 
 ra = RelationalAlgebra({
