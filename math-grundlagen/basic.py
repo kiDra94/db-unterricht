@@ -76,18 +76,21 @@ class RelationalAlgebra:
         return _
 
     def union(self, R, S):
-        seen = set()
-        for r in self.__rs[R]:
-            seen.add(r)
-            yield r
-        for s in self.__rs[S]:
-            if s not in seen:
-                yield s
+        return self.__rs[R] | self.__rs[S]
+        # seen = set()
+        # for r in self.__rs[R]:
+        #     seen.add(r)
+        #     yield r
+        # for s in self.__rs[S]:
+        #     if s not in seen:
+        #         yield s
+
 
     def minus_except(self, R, S):
-        for r in self.__rs[R]:
-            if r not in self.__rs[S]:
-                yield r
+        return self.__rs[R] - self.__rs[S]
+        # for r in self.__rs[R]:
+        #     if r not in self.__rs[S]:
+        #         yield r
 
 ra = RelationalAlgebra({
     "personen": {
