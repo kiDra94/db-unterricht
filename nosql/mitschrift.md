@@ -8,6 +8,8 @@ Instalation https://www.mongodb.com/docs/v8.0/tutorial/install-mongodb-on-debian
 
 Zum starten folgenden Befehl in der Shell eingeben. 
 ```shell
+sudo systemctl start mongod
+sudo systemctl status mongod
 mongosh
 ```
 
