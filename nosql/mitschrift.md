@@ -18,10 +18,9 @@ Die SH ist eine JS-Console!
 Befehle wenn es läugt:
 ```shell
 help
-use
-show
 show dbs
 show collections # show tables ist der gleiche befehl
+use [collections name]
 db.first.insertOne({hello: 'world'}) # fuegt einen Eintrag ein, immer als JSON-Format, und erzeugt automatisch die collections wenn es keine gibt
 show collections
 db.first.find() # ist der select *
