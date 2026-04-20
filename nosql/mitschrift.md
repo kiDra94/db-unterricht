@@ -73,3 +73,7 @@ db.listingsAndReviews.find({ property_type: 'Apartment'}, {name: 1, _id: 0}) # m
 db.listingsAndReviews.find({ property_type: 'Apartment', price: {$lt: 15}}, {name: 1, _id: 0, price: 1, "address.country": 1}) # ersets Objket sind die Filterbedingungen und das 2 die Zeilen die angezeigt werden
 db.listingsAndReviews.find({ property_type: 'Apartment', price: {$lt: 50}, "address.country": "Australia", amenities: "Elevator"}, {name: 1, _id: 0, price: 1, "address.country": 1, amenities: 1})
 ```
+
+**Aufgabe** 
+
+Mit KI Abfragen erstellen und CheetSheet ratings machen. Danach auf [GitHub](https://github.com/simon-gunacker/mongodb) pushen.
