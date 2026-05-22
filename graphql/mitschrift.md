@@ -30,3 +30,58 @@ usw.
 
 # Es werden viel Joins gebraucht und Rekursion, ist sehr kompliziert in SQL
 ```
+**WICHTIG**
+JEDER EINTRAG IN DIE DATENBANK IST EINE NODE!!!!
+
+## Befehle
+#Node erzeugen n fuer Node Person ist der Datentyp
+```
+CREATE (n:Person)
+```
+#Node erzeugen mit daten
+```
+CREATE (n:Person{name: 'Alice', age: 25, profession: 'SW Developer'})
+CREATE (n:Person{name: 'Bob', age: 27, profession: 'SW Developer'})
+```
+
+Abfrage beginnt immer mit MATCH dannach kommen "Zeichnungen in ASCII Art".
+```
+MATCH (n) RETURN n LIMIT 25;
+```
+Die () representieren "Kreise". 
+Das suchen nach eigenschaften geht wie folgt.
+```
+MATCH (n:Person{name: "Alice"}) RETURN n LIMIT 25;
+```
+Wenn wir nach Bob & Alice suchen wollen geht es so (ist nicht die optimale Variante, es geht nur darum zu zeigen das **n** und **m** eigentlich **Variablen** sind):
+```
+MATCH (n:Person{name: "Bob"}), (m:Person{name: "Alice"}) RETURN n, m LIMIT 25;
+```
+Beweis ist die folgende Abfrage wo wir eine Relations dannach machen:
+```
+MATCH (n:Person{name: "Bob"}), (m:Person{name: "Alice"})
+CREATE (m)-[:LIKES]->(n) RETURN *
+```
+m & n werden unten fuer die Relations verwendet! LIKES ist eine Edge, also Verbindung zwischen den einzelnen Nodes.
+
+Wenn wir die Relatons umdrehen wollen gibt es 2 Varienaten
+```
+MATCH (n:Person{name: "Bob"}), (m:Person{name: "Alice"})
+CREATE (m)<-[:HACKS]-(n) RETURN *
+
+MATCH (n:Person{name: "Bob"}), (m:Person{name: "Alice"})
+CREATE (n)-[:HACKS]->(m) RETURN *
+```
+Eine Variante ist m & n umtauschen, die zweite Variante ist den Pfeil umdrehen.
+
+Relations werden wie folgt Abgefragt:
+```
+MATCH p=()-[]->() RETURN p LIMIT 25;
+MATCH p=()-[:LIKES]->() RETURN p LIMIT 25;
+```
+Die [] stehen fuer die Edges (also die Relations).
+
+Das Loeschen funktineirt mit DELETE nach einen MATCH. Zum Aufpassen, wenn wir Loeschen und es Verbindungen gibt das man diese auch Mitloescht. Dies Loest man mit DETACH
+```
+MATCH (n) DETACH DELETE n;
+```
