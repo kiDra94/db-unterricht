@@ -2,11 +2,11 @@
 
 Graphen sind Mengen von Konten(V) und Ecken(E) (die Beziehungen zwischen den Knoten) (Node, Edges). Ein Graph ist eine Anzahl von Objekten und die Beziehungen daszwischen.
 
+G = (V, E) -- E=Menge all Edges(Kanten); V=Menge alle Vertices/Node(Knoten)
+Graphen können noch Richtungen haben.
+
 BSP:
-
 ```
-G = (V, E)
-
 G = ({1, 2, 3}, {(1, 2), (1, 3), (3, 3)})
 
 Personen(id INT, name TEXT)l;
