@@ -15,7 +15,7 @@ Generell sollte man wissen wie man group, join, selct machen kann!
     - man muss nicht großartig funktionen auswending wissen, wenn die funktion zb $or heisst und wir $oder schreiben ist egal
         - { age: { $gt: 25 } } oder { $gt: { age: 25 } } ist egal
         - logische fehler sind schlimm, nach einem $or kommt eine eckige klammer da es 2 bedingungen hat
-    - [**aggregation pipeline ganz wichtig**]()
+    - [**aggregation pipeline ganz wichtig**](https://www.mongodb.com/docs/manual/reference/method/db.collection.aggregate/#mongodb-method-db.collection.aggregate)
         - pipline wird als array ubergeben, jedes Stage ist ein Funktion wie $match, $group usw. (man muss sie als objekete weitergeben weil es JS verlangt, es gibt kein array von funktionen, nur objekten die funktionen sind.)
         - pipline wird von oben nach unten verarbeitet
         ```js
