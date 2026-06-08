@@ -85,3 +85,4 @@ Das Loeschen funktineirt mit DELETE nach einen MATCH. Zum Aufpassen, wenn wir Lo
 ```
 MATCH (n) DETACH DELETE n;
 ```
+sihe Repo von Simon (TODO: hier verlinken!)
