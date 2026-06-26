@@ -127,12 +127,23 @@ anshcauen wie sie funktinieren, bei laufzeit angeben das es O(1) ist. Beispiel m
 
 das betreiebssystem kuemmert sich darum. mehr informationen dazu brauchen wir nicht wissen
 
+## Realisierung von DB Anwendungen
+
+Decorator, wie baut man eine Verbindung mit einer DB auf, was macht ein courser. Wie mach ich es damit ich eine resoucre nicht vergesse zu schliessen (with open in python). Fehlerhendling ist wichtig, was muss ich abfangen, die nummern abfangen die die db liefert und sinvolle nachrichten an den nutzer liefern. Aufpassen welche infos ich an den nutzer liefere. API (REST API , NestJS). Designpattern (MVC, Controller service usw.)
+
+## DB Schnittstellen
+
+Was ist REST API, wie kann man sichercheit in diesen bereich gewaehrleisten. OAuth inclusive Sequenz diagram, welche Kompontenen mitspielen, SQLInjection.
+
+
+## ORM 
+
+Prisma ORM, welche 2 moeglichkeiten gibt es (bestehnde DB in Prisma holen und umgekehrt), was es generell macht. Es koennte eine Frage kommen wo man eine ORM bekommt das man nicht kennt mit doku.
 
 
 
 
-
-### Allgemeine Infos fuer alles
+## Allgemeine Infos fuer alles
 
 Was ist ein full table scan (select * from where (ohne indices)), laufzeit O(n). Auf den PK ist automatisch von der DB ein indices gesetzt, mann soll isch aber selber uberlegen wo wwlche sinn machen, bsp name bei person usw.
 
