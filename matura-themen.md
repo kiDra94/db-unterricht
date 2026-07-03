@@ -1,17 +1,17 @@
 # Thmenkörbe:
 
-## Theoretische Grundlagen
+## 1. Theoretische Grundlagen
 
 Generell Doku lessen koennen und methoden wie man in Informatik etwas dokumentieren kann (uml, erd, syntax diagramm, kommentare bzw. dockstrings/doxygen). Wichtig ist ein gegebens lesen zu koennen.
 
 - UML:
-    Klassen Diagramm (Pfeile -- Aggregation schluesselwort **hat**, Composition schluesselwort **besteht aus**)
+    Klassen Diagramm (Pfeile -- Aggregation schluesselwort **hat**, Composition schluesselwort **besteht aus**, wissen was der unterschied zwischen aggregationsfile (ist ein problem welches nicht in db sondern pos zu losen ist) und vererbungspfeile wissen (vererbung join, concrit usw table ansatz))
     Sequenz Diagramm
 - ERD:
 
 - Syntax Diagramm SQLite:
 
-## **[Relationaler Algebra und Mengenlehre](./math-grundlagen/math.grundlagen.datenbanke.md)**
+### **[Relationaler Algebra und Mengenlehre](./math-grundlagen/math.grundlagen.datenbanke.md)**
 
 Thema ist wozu RA wichtig in DB ist (Performance). Ein Optimizer macht es im normallfall, man kann es auch handisch machen. Einfaches Bsp: a : x + a : y --> a(x+y) (von 4 auf 2 rechnungen). Nicht zu fiel tiefe erwartet, wichtig sind die Grundregeln --> so schnell wie moeglich grosse datenmengen loszuwerden. **Es gibt in SQLite eine explainQuerry zum ueben!** einen select schreiben und mit diesem befehl schauen was sql damit macht, damit wann ein gefuehl dafuer kriegt.
 
@@ -55,7 +55,7 @@ Die O-Notation misst nicht nur die Laufzeit sondern auch den Speichern, weil ich
 In Kontext von DB ist wichtig die O-Notation erklaeren und algorithem die fuer DB wichtig sind (Suchalgorithmen), es kann die Frage kommen welche suchen es gibt, antwort es gibt linear ist aber langsamer, besser ist in log(n) zu suchen mit der voraussetzung das die Daten sortiert sind, in DB sind die daten als ein B-Baum gespeichert. Bei log(n) suchen bracht mann immer 2hochx schritte, bei 7 daten sind es immer 3 da 2hoch3 8 sind!
 Datenstruktur in DB zusammenhang --> HashMap bzw. Dict sind O(1) --> konstante Zeit, ich muss nur einmal rechnen. Problem sind HASH kollisionen uns Speicher, je mehr ich Hashmap habe desto mehr Speicher brauch ich. Bei den Baeummen kann es passier das die Insert/Updates/Delete sehr langsam werden da sich der Baum eventuell neu sortieren muss.
 
-## Datenmodelierung
+## 2. Datenmodelierung
 
 ### Normalformen
 
@@ -84,7 +84,7 @@ Welche sachen damit lsoen kann. Constraint ist relativ einfach. Trigger nur im e
 
 Notationen muessen wir nicht wissen, kardinaliten sind 1-1 1-n n-m beziehungen usw. Schell eine mini DB entwerffen und erklaren warum was gemacht worden ist.
 
-## Abfrage Sprachen SQL
+## 3. Abfrage Sprachen SQL
 
 Grundversteandnis was SQL uberhaupt ist, welche kategoreieren es in der Sprache gibt. DQL DDL DML DCL usw. Bsp. insert into Personen max musterman ist DML.
 
@@ -109,7 +109,7 @@ Man sollte schon wissen das eine transaktion atomr sein muss.
 
 wissen was es ist wenn wir es selber irgendwo erwaehnen, wird nicht expliziet nachgefragt!
 
-## Methoden der Datenverwaltung
+## 4. Methoden der Datenverwaltung
 
 ### **Indices** (Das Hauptthema)
 
@@ -127,21 +127,40 @@ anshcauen wie sie funktinieren, bei laufzeit angeben das es O(1) ist. Beispiel m
 
 das betreiebssystem kuemmert sich darum. mehr informationen dazu brauchen wir nicht wissen
 
-## Realisierung von DB Anwendungen
+## 5. Realisierung von DB Anwendungen
 
 Decorator, wie baut man eine Verbindung mit einer DB auf, was macht ein courser. Wie mach ich es damit ich eine resoucre nicht vergesse zu schliessen (with open in python). Fehlerhendling ist wichtig, was muss ich abfangen, die nummern abfangen die die db liefert und sinvolle nachrichten an den nutzer liefern. Aufpassen welche infos ich an den nutzer liefere. API (REST API , NestJS). Designpattern (MVC, Controller service usw.)
 
-## DB Schnittstellen
+## 6. DB Schnittstellen
 
-Was ist REST API, wie kann man sichercheit in diesen bereich gewaehrleisten. OAuth inclusive Sequenz diagram, welche Kompontenen mitspielen, SQLInjection.
-
-
-## ORM 
-
-Prisma ORM, welche 2 moeglichkeiten gibt es (bestehnde DB in Prisma holen und umgekehrt), was es generell macht. Es koennte eine Frage kommen wo man eine ORM bekommt das man nicht kennt mit doku.
+Was ist REST API, wie kann man sichercheit in diesen bereich gewaehrleisten. OAuth inclusive Sequenz diagram, welche Kompontenen mitspielen, SQLInjection (eine code sollte man wissen, man kann einen frei erfinden, bzw wissen wie man eine basic sql injection schreibt.). 
 
 
+## 7. ORM 
 
+Prisma ORM, welche 2 moeglichkeiten gibt es (bestehnde DB in Prisma holen und umgekehrt), was es generell macht. Es koennte eine Frage kommen wo man eine ORM bekommt das man nicht kennt mit doku. Jeder soll das grundprinzip erklaren koennen, man kann dazu ein uml mit einem klassendiagram zeigen die die abhaengikeiten zeigt. Es gibt 2 ansätze, warum es beide gibt, welches anwendungsfälle es für beide gibt und welche vorteile/nachteile es pro anwendung und ansatz gibt. Gnerelle vor und nachteile von einem ORM, ab welcher komplexität sich ein auszahlt. welche orm es gibt. prisma reicht aus. 
+Frage wie eine Abfrage in einer ORM ausschaut. npm instalation ist egal, zu wissen ist, welche tools das orm mitliefert (prisma migrate, zur versionsverwaltung reicht aus, man muss nur wissen das es die gibt uns was sie machen). Die methoden vom ORM sollte man grob auswending wissen. die grundlegenden sollte man shcon wissen (wie find usw.).
+
+## 8. NO SQL DB
+
+Was ist es überhaupt ist (antwort nicht relationale DB). Was heisst überhaupt relationall (relations und beziehungen, der grund warum die relationale so heißt ist nicht weil die tabllen relational sind, sonder weil es beziehungen zwischen den daten in der spalte mit dem gegebenen anmen der spalte gibt). Welche Arten es gibt, dokumentbasiert (MongoDB) und graphbasiert (Neo4j). Anwendungsbereiche wo no sql besser als sql ist (wo wir nicht wissen wie die daten ausschauen, schemaless). BSP - dynamische Daten von einem Sensor, noch allgemeiner Amazon, er verkauft Artikel, es gibt ein unterschied ob es ein Laptop oder T-Shirt ist, das einzige gemansame ist die ID und eventull bezeichnung, Laptop hat einen Arbetischspeicher als Feld, das T-SHIRT nicht.
+
+Spanende Thema allgemein bei neuen DB-Technoligien, wir wollen von sql auf eine nosql umsteigen, das erste was wir mache ich schaue mir an wie die basic CRUD optionen geht (create, inser, update, delete), wie gehen die JOINs usw.. SQL bei den NO SQL fragen immer im hinterkopf behalten.
+
+### MongoDB
+
+Wie Speichert die Mnogo DB ihre Daten (JSON), wenn diese stichwort fällt kann man über json reden. Warum JSON, flexibel, JavaScript SHell, Internet-Standard.
+
+XML, ehr selten weil schwerer zu lesen, mehr speicher und langsamer, vorteil von XML -- man hat atribute und es nicht schemaless (man kann sich den aufbau überlegen, es kann auch ein nachteil sein da daten die nicht im schema sind probleme machen können.), man kann mit xml auch übersetzer zwischen 2 schemata zu machen (heißt xslt).
+Spannend bei XML könnten eine frage sein mit doku -- XPath. wenn man das versteht, versteht man den zusammenhang zwischen xml und dbs. 
+
+JAML -- nahchteil man weiss nicht ob es fertig ist oder nicht.
+
+MongoDB -- dokumentenbasiert, javascript, collections statt tabellen, collections sind arrays mit lauter json objekten (das sind die Zeilen). Das 
+
+### Neo4J
+
+wie man speichert, wie man darauf zugreifft, wie loese ich joins, subselects usw. änliche fragen wie bei mongo im prinzip. Cipher -- einfache querries sollte man wissen, syntax wird nicht genau abgefragt, das "ascii art style" sollte man wissen, also wie das pattern ist. Es kann sein das man einen SQL SELECT mit vielen joins in cipher übersetzen. Basic CRUD operationen sollten man wissen.
 
 ## Allgemeine Infos fuer alles
 
@@ -160,3 +179,5 @@ serch(list, elem):
     else
         return n
 ```
+
+Wenn man frameworks und konzepte vorstellt ist es gut ein par Zeilen code als beispiel, syntax ist egal.
