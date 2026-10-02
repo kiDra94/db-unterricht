@@ -1,3 +1,5 @@
+PRAGMA foreign_keys = ON; -- SQLite prueft FKs nur, wenn das pro Verbindung eingeschaltet ist
+
 CREATE TABLE kunde(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL

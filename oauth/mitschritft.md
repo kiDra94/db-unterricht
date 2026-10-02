@@ -16,4 +16,4 @@ Schriite:
 - npm i @nestjs/config, app module config module importieren 
 
 Die config module ladet die .env.
-Injecteble ist ein Iterface fuer eine Klasse
+@Injectable() ist ein Decorator: er markiert eine Klasse, damit Nest sie selber erzeugen und per Dependency Injection (im Konstruktor) uebergeben kann.

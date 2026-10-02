@@ -1,6 +1,6 @@
-## GraphQL
+## Neo4j (Graphdatenbank, Sprache: Cypher)
 
-Graphen sind Mengen von Konten(V) und Ecken(E) (die Beziehungen zwischen den Knoten) (Node, Edges). Ein Graph ist eine Anzahl von Objekten und die Beziehungen daszwischen.
+Graphen sind Mengen von Knoten(V) und Kanten(E) (die Beziehungen zwischen den Knoten) (Node, Edges). Ein Graph ist eine Anzahl von Objekten und die Beziehungen daszwischen.
 
 G = (V, E) -- E=Menge all Edges(Kanten); V=Menge alle Vertices/Node(Knoten)
 Graphen können noch Richtungen haben.
@@ -25,7 +25,7 @@ INSERT INTO knows(3, 4);
 
 FROM Person alice
 JOIN knows k1 ON alice.id = k1.from_id
-JOIN knows k2 ON k1.from_id = k2.to_id
+JOIN knows k2 ON k1.to_id = k2.from_id
 usw.
 
 # Es werden viel Joins gebraucht und Rekursion, ist sehr kompliziert in SQL

@@ -21,7 +21,7 @@ export class AppController {
   googleCallback(@Req() req, @Res() res) {
     const jwt = this.jwtService.sign({
       id: req.user.googleId,
-      user: req.user.email,
+      email: req.user.email, // muss 'email' heissen, weil jwt.strategy.ts payload.email prueft
       name: req.user.name,
     });
 

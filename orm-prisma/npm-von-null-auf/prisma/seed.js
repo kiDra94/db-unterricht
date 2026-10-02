@@ -13,7 +13,7 @@ const members = ({
 });
 
 await prisma.member.findMany();
-// await client.member.createMany(members);
+// await prisma.member.createMany(members);
 
 // const courses = {
 //     data: [
@@ -40,6 +40,9 @@ await prisma.member.findMany();
 //     ]
 // };
 
-// await client.assigment.deleteMany();
-// await client.course.deleteMany();
-// await client.course.createMany(courses);
+// await prisma.assigment.deleteMany();
+// await prisma.course.deleteMany();
+// createMany kann keine verschachtelten creates (assigments), darum jeden Kurs einzeln mit create:
+// for (const kurs of courses.data) {
+//     await prisma.course.create({ data: kurs });
+// }

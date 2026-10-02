@@ -39,15 +39,21 @@ find(xs, x):
 
 ```
 
-Bsp fuer O(log(n)) ist schneller als O(n). Bsp ist Binaere suche, foraussetzung das es schon sortiert ist. (Das bsp unten ist programiertechnisch nicht komplet richtig da die abbruch bedingung nicht existiert).
+Bsp fuer O(log(n)) ist schneller als O(n). Bsp ist Binaere suche, foraussetzung das es schon sortiert ist. (Korrigiert: mit Abbruchbedingung, gibt -1 zurueck wenn nicht gefunden).
 
 ```python
-find(haystack, needle):
-    x = haystack(n/2)
-    if needle > x:
-        find(haystack[n/2: ], needle)
-    else
-        find(haystack[ :n/2], needle)    
+def find(haystack, needle):
+    if len(haystack) == 0:
+        return -1
+    mitte = len(haystack) // 2
+    if haystack[mitte] == needle:
+        return mitte
+    if needle > haystack[mitte]:
+        ergebnis = find(haystack[mitte + 1:], needle)
+        if ergebnis == -1:
+            return -1
+        return mitte + 1 + ergebnis
+    return find(haystack[:mitte], needle)
 ```
 
 Die O-Notation misst nicht nur die Laufzeit sondern auch den Speichern, weil ich sachen schneller machen kann in dem ich mehr speicher benutze (Bsp. Cachen bei Rekursion fibonachi zahlen).
@@ -119,6 +125,8 @@ Macht es schneller, kostet aber speicher! Es gibt da eine uebung dazu und die re
 
 es gibt viele website wo man daten in einen b+baum einfugen kann wo wir es ueben koennen. damit wir grob erklaren koennen wie grob daten in dem baum eingefuegt werden koennen. 
 
+Achtung: mein Referat-Code (1-2/db/b-tree) ist ein B-Baum, kein B+-Baum. Unterschied: beim B+-Baum liegen die Daten nur in den Blaettern, und die Blaetter sind miteinander verkettet (gut fuer Bereichsabfragen wie BETWEEN).
+
 ### Hash-Map (im sinne wenn ich eine selber machen wuerde, bzw es ist so implementiert)
 
 anshcauen wie sie funktinieren, bei laufzeit angeben das es O(1) ist. Beispiel mit Anfangsbuchstaben expliziet erwahnen das es nur zur veranschaulichung ist. Die Hash Map kann viel mehr. Anwendungsfall neben den Indices ist Chaching, JOINS (keys matchen). Am besten anschauen wo einen DB hashmap benutzt damit man beispile hat (merken von laufenden transaktionen). 
@@ -167,16 +175,21 @@ wie man speichert, wie man darauf zugreifft, wie loese ich joins, subselects usw
 Was ist ein full table scan (select * from where (ohne indices)), laufzeit O(n). Auf den PK ist automatisch von der DB ein indices gesetzt, mann soll isch aber selber uberlegen wo wwlche sinn machen, bsp name bei person usw.
 
 Wenn man uber eine binaren suche redete sollte man ein pseude code schreiben koennen, bei der linerean sowieso (nur ein for each element int bla bla)
-Bsp binare suche rekursive:
-```
-serch(list, elem):
-    n = len(list) / 2
-    x = list[n]
-    if(x > elem):
-        return search(list[:n], elem)
-    elif (x < elem):
-        return serach(list[n:], elem)
-    else
+Bsp binare suche rekursive (korrigiert: Abbruch bei leerer Liste, und bei der rechten Haelfte muss man die Position wieder dazurechnen):
+```python
+def search(liste, elem):
+    if len(liste) == 0:
+        return -1
+    n = len(liste) // 2
+    x = liste[n]
+    if x > elem:
+        return search(liste[:n], elem)
+    elif x < elem:
+        ergebnis = search(liste[n + 1:], elem)
+        if ergebnis == -1:
+            return -1
+        return n + 1 + ergebnis
+    else:
         return n
 ```
 

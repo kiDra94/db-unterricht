@@ -20,7 +20,7 @@
 ### Kartesische Produkt
 - **Das Kreuzprodukt** (jedes mit jedem wird kombiniert).$$A \times B := \{(a,b) \mid a \in A,\; b \in B\}$$ allgemein $$f: A \to B \land (\forall a \in A)(\exists! b \in B)(f(a) = b)$$
 - **Relation**
-	- eine Relation ist eine echte **Teilmenge** aus dem kart. Produkt von **n-Mengen**. $$R \subseteq A \times A \times \dots \times A$$
+	- eine Relation ist eine **Teilmenge** aus dem kart. Produkt von **n-Mengen**. $$R \subseteq A \times A \times \dots \times A$$
 	Bsp. Menge A1 = {1, 2, 3, 4} Menge B = {a, b, c} -> R ist eine Teilmenge aus {(1, a), (2, a), (3, a), (4, a), (1, b), ... , (4, c)}.
 	Bsp. einer Relation ```{"personen": {(1, "Max", "Musterman"), (2, "Erika", "Musterfrau")}```
 	- **Projektionsoperator $\pi$ (Pi)**

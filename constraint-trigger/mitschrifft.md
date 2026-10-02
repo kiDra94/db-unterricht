@@ -110,7 +110,8 @@ Tabelle mit abteilungen(id, name, budget, parant_id).
 Beim trigger sagen wir das wir ein budget hat. Die Abteilung unterhalb bekommen ein teil davon. 
 Wenn parent abteilung einen verdoppelung kriegt sollen die kinder auch ihre budgets verdoppeln
 
-R&D hat erhoeung von 5000 auf 10000. Die Kinder IT und HW sollen auch verdoppelt werden. Der Trigger kann nur auf die tablle abteilung gelegt werden. da er sich selber immer aendert kommen wir in eine Rekursion
+R&D hat erhoeung von 5000 auf 10000. Die Kinder IT und HW sollen auch verdoppelt werden. Der Trigger kann nur auf die tablle abteilung gelegt werden. da er sich selber immer aendert kommen wir in eine Rekursion.
+In SQLite sind rekursive Trigger aber standardmaessig aus (PRAGMA recursive_triggers = OFF). Deshalb wird unten nur eine Ebene geaendert. Mit PRAGMA recursive_triggers = ON wuerde der Trigger weiter nach unten laufen.
 
 ```sql
 CREATE TABLE abteilung(

@@ -2,7 +2,7 @@
 
 ## MongoDB
 
-Ist eine hirarchische Datenbank.
+Ist eine dokumentbasierte Datenbank (die Dokumente koennen verschachtelt sein).
 
 Instalation https://www.mongodb.com/docs/v8.0/tutorial/install-mongodb-on-debian/ , oder https://www.mongodb.com/products/tools/compass .
 

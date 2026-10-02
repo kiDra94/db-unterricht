@@ -29,7 +29,8 @@ UPDATE konto SET saldo = saldo - 300 WHERE id = 2;
 BEGIN TRANSACTION; --zweite Verbindung
 UPDATE konto SET saldo = saldo - 300 WHERE id = 2;
 -- Runtime error: database is locked (5)
--- DB garantiert das man nur eine Transaktion auf einer Tabelle gleichzeitig offen haben kann
+-- DB garantiert das man nur eine schreibende Transaktion gleichzeitig offen haben kann
+-- SQLite sperrt dabei die ganze Datenbankdatei, nicht nur eine Tabelle
 -- wenn wir die erste Verbindung schliessen wird ein rollback gemacht und die Tabelle ist wieder offen
 
 -- Bei einer Transaktion wird eine journal-Datei erzeugt. Die Datei kopiert nur relevante teile der .db
