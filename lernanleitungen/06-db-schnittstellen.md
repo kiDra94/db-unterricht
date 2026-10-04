@@ -136,7 +136,7 @@ print(guard(ApiKeyStrategie(), {"api-key": "1234"}))   # 200
 
 **Das Sequenzdiagramm aus deinem Ordner** (Wikipedia-Grafik, liegt in [oauth/Authorization-Code-Grant-Flow.png](../oauth/Authorization-Code-Grant-Flow.png)):
 
-![OAuth 2.0 Authorization Code Grant – Sequenzdiagramm (Quelle: Wikipedia, in deinem Ordner oauth/)](../oauth/Authorization-Code-Grant-Flow.png)
+![OAuth 2.0 Authorization Code Grant – Sequenzdiagramm](bilder/06-oauth.png)
 
 **Ablauf in eigenen Worten** (Beispiel der Grafik: Druckdienst D will Fotos vom Fotodienst F drucken):
 1.–2. Der Mensch will über den Browser eine Ressource vom Client (Druckdienst).
@@ -163,11 +163,82 @@ print(guard(ApiKeyStrategie(), {"api-key": "1234"}))   # 200
 
 📝 Commits 06.–09.03.2026: „geruest fuer jwt strategy“, „implemented jwt logic in the callback endpoint“, „imported&implemnted cookieparser“, „implemented cors credentials“.
 
+**Ganz einfach erklärt** (ohne Fachbegriffe) [Allgemeinwissen]:
+
+| Begriff | Was ist das? | Vergleich aus dem Alltag |
+|---|---|---|
+| **JWT** | Ein **Ausweis**, den der Server nach dem Login ausstellt. Darauf steht, wer du bist und wie lange er gilt. Der Server setzt eine Unterschrift darauf, die nur er machen kann. | **Festival-Armband**: Am Eingang zeigst du einmal dein Ticket (Login). Danach schauen die Ordner nur noch auf das Armband. Jeder kann lesen, was darauf steht, aber fälschen kann man es nicht. |
+| **Cookie** | Ein kleiner **Zettel**, den der Server dem Browser gibt. Der Browser hebt ihn auf und schickt ihn bei **jeder** Anfrage an diesen Server **automatisch** mit. | **Garderobenmarke**: Du bekommst sie einmal und hast sie dann immer dabei. Du musst nicht jedes Mal daran denken. |
+| **CORS** | Eine **Gästeliste**, die der Server dem Browser mitgibt: „Nur diese Webseiten dürfen meine Antworten lesen.“ Der **Browser** hält sich daran und blockiert alle anderen. | **Türsteher mit Gästeliste**: Wer nicht draufsteht, kommt nicht rein. Der Türsteher steht aber nur vor dem Browser. Wer ohne Browser kommt (z. B. mit `curl`), wird gar nicht kontrolliert. |
+
+**Wie die drei zusammenspielen** – ganz simples Beispiel. Das Frontend läuft auf `http://localhost:5173`, die API auf `http://localhost:3000`:
+
+```text
+1. LOGIN
+   Browser → API:   GET /auth/google/callback            (Login über Google ist fertig)
+   API → Browser:   Set-Cookie: accesToken=eyJhbGci...; HttpOnly
+                    → der JWT liegt jetzt als Cookie im Browser
+
+2. SPÄTERE ANFRAGE
+   Browser → API:   GET /hello
+                    Cookie: accesToken=eyJhbGci...        ← schickt der Browser von selbst mit
+   API:             prüft die Unterschrift im JWT → gültig
+   API → Browser:   200  "Hallo anna@schule.at"
+                    (ohne Cookie oder mit gefälschtem JWT → 401 Unauthorized)
+
+3. CORS (weil 5173 und 3000 verschiedene Origins sind)
+   API → Browser:   Access-Control-Allow-Origin: http://localhost:5173
+                    Access-Control-Allow-Credentials: true
+   Browser:         „5173 steht auf der Liste“ → das Frontend darf die Antwort lesen
+   Eine fremde Seite (z. B. http://boese.at) ruft /hello auf
+                    → steht nicht auf der Liste → der Browser blockiert die Antwort
+```
+
+Kurz gesagt: **JWT** = wer bin ich, **Cookie** = wo der Browser den JWT aufhebt und automatisch mitschickt, **CORS** = welche Webseiten im Browser überhaupt mit der API reden dürfen.
+
+⚠️ In deinem [main.ts](../oauth/withGoogle/google/src/main.ts) läuft die API auf Port 3000, und `origin` ist auch `http://localhost:3000`. Das ist **derselbe** Origin, CORS wird dabei also gar nicht gebraucht. Interessant wird es erst, wenn das Frontend woanders läuft, z. B. mit Vite auf 5173. Dann muss genau dieser Origin in `origin` stehen.
+
 **JWT** (JSON Web Token) – 🌐 [Wikipedia – JSON Web Token](https://en.wikipedia.org/wiki/JSON_Web_Token):
 - Drei Teile, mit Punkt getrennt: `header.payload.signature`, jeweils **Base64url**-kodiert.
 - Header = Algorithmus (z. B. HS256), Payload = Daten (Claims, z. B. E-Mail, Ablaufzeit), Signature = mit dem **Secret** signiert.
 - Payload ist **nicht verschlüsselt**, jeder kann sie lesen – die Signatur beweist nur, dass niemand sie verändert hat. → Keine Passwörter in den JWT.
 - **Zustandslos**: Der Server muss sich keine Sessions merken, er prüft nur die Signatur.
+
+**JWT als Pseudocode** [Allgemeinwissen, Aufbau nach 🌐 [RFC 7519](https://datatracker.ietf.org/doc/html/rfc7519)]. Teil 1 passiert bei dir im Callback, also **nach Schritt 12** im OAuth-Diagramm oben. Teil 2 passiert bei jeder späteren Anfrage, z. B. auf `/hello`:
+
+```text
+// 1. JWT ERSTELLEN (Server, nach dem Login)
+header    = { "alg": "HS256", "typ": "JWT" }
+payload   = { "id": 42, "email": "anna@schule.at", "exp": jetzt + 1 Stunde }
+
+teil1     = base64url(header)
+teil2     = base64url(payload)
+signatur  = HMAC_SHA256(teil1 + "." + teil2, SECRET)   // SECRET kennt nur der Server
+jwt       = teil1 + "." + teil2 + "." + base64url(signatur)
+
+setze Cookie "accesToken" = jwt   (httpOnly)
+
+
+// 2. JWT PRÜFEN (Server, bei jeder Anfrage)
+jwt = aus Header "Authorization: Bearer <jwt>"  ODER  aus Cookie "accesToken"
+wenn kein jwt                                   → 401 Unauthorized
+
+[teil1, teil2, signatur] = jwt.split(".")
+wenn HMAC_SHA256(teil1 + "." + teil2, SECRET) != signatur
+                                                → 401   // Token wurde verändert
+payload = json(base64url_decode(teil2))
+wenn payload.exp < jetzt                        → 401   // Token abgelaufen
+
+sonst: Anfrage erlauben, angemeldeter User = payload.email
+```
+
+So sieht so ein Token wirklich aus. Ich habe ihn mit dem Payload von oben und `SECRET = "geheim"` erzeugt, die drei Teile sind durch Punkte getrennt:
+
+```text
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDIsImVtYWlsIjoiYW5uYUBzY2h1bGUuYXQiLCJleHAiOjE3OTAwMDAwMDB9.Msk2xvNSR-JqDkztcqrh0qJVmzl-ywdpvqDX_cvKhys
+```
+
+Den mittleren Teil kann jeder zurück in `{"id":42,"email":"anna@schule.at","exp":1790000000}` umwandeln, z. B. auf jwt.io. Darum gehören keine Passwörter in den Payload. Ändert jemand die E-Mail im Payload, passt die Signatur nicht mehr, und der Server antwortet mit 401.
 
 📝 Dein Ablauf: Callback → `this.jwtService.sign({ id, user, name })` → `res.cookie('accesToken', jwt, { httpOnly: true, sameSite: 'lax', maxAge: 3600000 })` → `JwtStrategy` liest den Token aus `Authorization: Bearer …` **oder** aus dem Cookie → `@UseGuards(AuthGuard('jwt'))` schützt `/hello`.
 - `httpOnly` [Allgemeinwissen]: JavaScript im Browser kann das Cookie nicht lesen → schützt vor Diebstahl durch eingeschleustes Script.

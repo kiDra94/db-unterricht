@@ -68,9 +68,6 @@ classDiagram
     class Assigment { id; name; description }
 ```
 
-> 📷 FOTO-PLATZHALTER: Handgezeichnetes Klassendiagramm Member/Teacher/Student/Course/Assigment mit Dreieckspfeil (Vererbung) und gefüllter Raute (Komposition)
-> ![](bilder/01-grundlagen-klassendiagramm.png)
-
 **b) Sequenzdiagramm** – zeigt, **wer wem wann** eine Nachricht schickt.
 - Oben stehen die Beteiligten, darunter senkrechte **Lebenslinien**.
 - Waagrechte Pfeile = Nachrichten/Aufrufe, von oben nach unten in **zeitlicher Reihenfolge**.
@@ -90,8 +87,7 @@ classDiagram
 - **Beispiel:** In deiner Mitschrift [constraint-trigger/mitschrifft.md](../constraint-trigger/mitschrifft.md) ist das Diagramm [table-constraint](https://sqlite.org/syntax/table-constraint.html) verlinkt. Daraus liest man ab: Ein Tabellen-Constraint kann mit `CONSTRAINT name` beginnen (optional) und ist dann `PRIMARY KEY`, `UNIQUE`, `CHECK` oder `FOREIGN KEY`. Genauso kannst du am Diagramm sehen, dass `STRICT` am Ende von `CREATE TABLE` erlaubt ist.
 - Liste aller Diagramme: 🌐 [sqlite.org/syntaxdiagrams.html](https://www.sqlite.org/syntaxdiagrams.html)
 
-> 📷 FOTO-PLATZHALTER: Screenshot des SQLite-Syntaxdiagramms „table-constraint“ mit eingezeichneten Lesepfeilen (optional / Schleife)
-> ![](bilder/01-grundlagen-syntaxdiagramm.png)
+> ![sql-lite-diagramm](bilder/1-sql-lite-diagramm.png)
 
 **Kommentare / Docstrings / Doxygen:** Doku direkt im Code. In Python steht der Docstring in `"""..."""` direkt unter der Funktion. Doxygen [Allgemeinwissen] erzeugt aus speziell formatierten Kommentaren (C++, auch andere Sprachen) eine HTML-Doku.
 
@@ -187,9 +183,6 @@ WHERE p.geschlecht = 'w';
 
 📝 matura-themen.md: „**Es gibt in SQLite eine explainQuery zum Üben!** … damit man ein Gefühl dafür kriegt.“ Ausgabe enthält `SCAN` (ganze Tabelle durchgehen) oder `SEARCH ... USING INDEX` (gezielt) – 🌐 [sqlite.org/eqp.html](https://www.sqlite.org/eqp.html). Wichtig: `EXPLAIN QUERY PLAN` **führt die Abfrage nicht aus**, es zeigt nur den Plan.
 
-> 📷 FOTO-PLATZHALTER: Tafelbild/Skizze: Kreuzprodukt personen × hobbys als Tabelle, die passenden Zeilen markiert (= Join)
-> ![](bilder/01-grundlagen-join-kreuzprodukt.png)
-
 ### 3.4 DBMS-Aufbau (≈ 3 min)
 
 📝 matura-themen.md: „Man muss diese nicht auswendig lernen und aufzählen können. Man muss nur grob sagen, welche es gibt und was in denen passiert“ – und zwar so, „wie du programmieren würdest“: welche Klasse, welche Methoden.
@@ -247,9 +240,6 @@ class DBMS:
 ```
 
 🌐 Weitere Aufgaben eines DBMS laut [Wikipedia – Datenbankmanagementsystem](https://de.wikipedia.org/wiki/Datenbankmanagementsystem): Verwaltung der Metadaten, Datensicherheit/Datenschutz, Datenintegrität, Mehrbenutzerbetrieb durch Transaktionen, Optimierung von Abfragen, Trigger und Stored Procedures.
-
-> 📷 FOTO-PLATZHALTER: Selbst gezeichnetes Blockdiagramm „SQL-Text → Parser → Optimizer → Ausführung → B-Baum → Pager/Cache → Datei“, Transaktionsmanager seitlich daneben
-> ![](bilder/01-grundlagen-dbms-aufbau.png)
 
 ### 3.5 O-Notation, Komplexität, Datenstrukturen (≈ 3 min)
 
@@ -330,9 +320,6 @@ Ohne Cache wird dasselbe immer wieder neu berechnet (exponentiell viele Aufrufe)
 - Auf den **Primärschlüssel** setzt die DB automatisch einen Index (📝 „Allgemeine Infos“).
 → Ausführlich in [04-methoden-der-datenverwaltung.md](04-methoden-der-datenverwaltung.md).
 
-> 📷 FOTO-PLATZHALTER: Skizze binäre Suche: sortierte Liste 1–8, Suche nach 7 in 3 Schritten mit durchgestrichenen Hälften
-> ![](bilder/01-grundlagen-binaere-suche.png)
-
 ---
 
 ## 4. Zusammenhänge (zum Weiterführen des Gesprächs)
@@ -400,5 +387,3 @@ Grob: Parser/Compiler für DDL, DML, DQL und DCL, einen Optimizer, die Ausführu
 - https://www.sqlite.org/eqp.html
 - https://de.wikipedia.org/wiki/Datenbankmanagementsystem
 - https://de.wikipedia.org/wiki/Landau-Symbole
-
-**Nicht gefunden:** Präsentation von Anh zum DBMS-Aufbau.

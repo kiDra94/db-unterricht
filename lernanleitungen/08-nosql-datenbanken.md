@@ -203,9 +203,6 @@ db.shipwrecks.aggregate([
 ```
 🌐 [mongodb.com – $lookup](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/): `$lookup` „performs a **left outer join**“ und hängt die Treffer als **Array** an jedes Dokument. 📝 Aufgabe 2 zeigt die erweiterte Form mit `let` + `pipeline` + `$match`, um das Wrack selbst auszuschließen.
 
-> 📷 FOTO-PLATZHALTER: Skizze Aggregation-Pipeline: Collection → [$match] → [$group] → [$lookup] → Ergebnis, mit Anzahl Dokumente nach jeder Stage
-> ![](bilder/08-nosql-mongodb-pipeline.png)
-
 ### 3.5 Neo4j und Cypher (≈ 4 min)
 
 📝 Unterricht ab 22.05.2026 ([neo4js/mitschrift.md](../neo4js/mitschrift.md)), Assignment [special-queries-kiDra94](../../special-queries-kiDra94/README.md) (Juni 2026), [teststoff-4.md](../teststoff-4.md).

@@ -78,33 +78,6 @@ DROP INDEX IF EXISTS index_address;
 - Deine Schlussfolgerung: „Rein technisch würde der Index am meisten Sinn bei der 'address' machen, da in diesem Fall die Streuung die größte ist.“
 - Fachbegriff [Allgemeinwissen]: Streuung ≈ **Selektivität**. Je selektiver eine Spalte, desto weniger Zeilen liefert eine Suche und desto mehr bringt der Index.
 
-✅ **Zeitmessung in deiner Übung – korrigiert am 02.10.2026.** Die alte Messung war falsch, die alten Prozentzahlen (60 % / 80 %) bitte **nicht** mehr nennen:
-1. Für „mit Index“ wurde nur `EXPLAIN QUERY PLAN SELECT …` gemessen (seit Commit `c9a3115`, 25.09.2025). `EXPLAIN QUERY PLAN` **führt die Abfrage nicht aus**, es zeigt nur den Plan (🌐 [sqlite.org/eqp.html](https://www.sqlite.org/eqp.html)).
-2. Ohne Index wurde nach `firstname` gesucht, mit Index nach `lastname` – zwei verschiedene Abfragen.
-3. `LIKE '%IL%'` beginnt mit einem Platzhalter → SQLite versucht dann gar nicht, einen Index zu benutzen (🌐 [sqlite.org/optoverview.html](https://www.sqlite.org/optoverview.html): „if the right-hand side begins with a wildcard character then this optimization is not attempted“).
-4. Auch `LIKE 'B%'` nutzt einen normalen Index in SQLite **nicht**, weil `LIKE` standardmäßig Groß/Kleinschreibung ignoriert und der Index binär sortiert ist (gleiche Quelle).
-
-In SQLite 3.46 nachgeprüft:
-
-```text
-EXPLAIN QUERY PLAN SELECT * FROM p WHERE name = 'Max'       → SEARCH p USING COVERING INDEX ix (name=?)
-EXPLAIN QUERY PLAN SELECT * FROM p WHERE name LIKE 'B%'     → SCAN p
-EXPLAIN QUERY PLAN SELECT * FROM p WHERE name LIKE '%IL%'   → SCAN p
-EXPLAIN QUERY PLAN SELECT * FROM p WHERE id = 5             → SEARCH p USING INTEGER PRIMARY KEY (rowid=?)
-```
-
-**Was jetzt in deiner Übung steht:** [time_measurement.py](../../assigment/assigment-indizes/time_measurement.py) und [index_address.py](../../assigment/assigment-indizes/index_address.py) messen dieselbe Abfrage mit `=`, einmal ohne und einmal mit Index (Durchschnitt aus 5 Läufen, inkl. `fetchall()`), und zeigen dazu den Plan. Neue Ergebnisse (auf einer Kopie von fake_dat.db gemessen, auch in [report.md](../../assigment/assigment-indizes/report.md)):
-
-| Abfrage | ohne Index (`SCAN`) | mit Index (`SEARCH … USING INDEX`) |
-|---------|---------------------|------------------------------------|
-| `WHERE lastname = 'Abbott'` (212 Treffer) | ca. 50 ms | ca. 0,5 ms (≈ 100-mal schneller) |
-| `WHERE address = '…'` (1 Treffer, 100 % Streuung) | ca. 51 ms | ca. 0,03 ms |
-
-**So erzählst du die Übung in der Prüfung:** 500 000 Kunden, Index kostet 17,2 % Speicher. Die Streuung entscheidet, welche Spalte sich lohnt. Ohne Index zeigt `EXPLAIN QUERY PLAN` einen `SCAN`, also einen Full Table Scan mit ca. 50 ms. Mit Index zeigt er `SEARCH … USING INDEX`, das dauert nur Bruchteile einer Millisekunde. Bei der Adresse ist der Gewinn am größten, weil nur eine Zeile gefunden wird.
-
-> 📷 FOTO-PLATZHALTER: Screenshot Terminal: EXPLAIN QUERY PLAN vor dem Index (SCAN customer) und nach dem Index (SEARCH customer USING INDEX index_address)
-> ![](bilder/04-datenverwaltung-explain-query-plan.png)
-
 ### 3.3 B+-Baum (≈ 4 min)
 
 📝 matura-themen.md: „Alternative sind B+-Bäume, eventuell es auch hinzeichnen, warum sie balanciert sein müssen, also jedes Elternteil möglichst gleich viel Kinder hat. Es gibt 2 Referate dazu (meins und von der Anh).“ Und: „sichere Folgefragen zu Indices“.
@@ -155,11 +128,6 @@ Der Baum wächst **nach oben** (neue Wurzel), nicht nach unten – deshalb bleib
 
 **Zum Üben** (📝 „es gibt viele Websites, wo man Daten in einen B+-Baum einfügen kann“): z. B. 🌐 „B+ Tree Visualization“ der University of San Francisco: https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html (Seite existiert; dass man dort Werte einfügen kann, konnte ich ohne JavaScript nicht prüfen – bitte selbst ausprobieren).
 
-> 📷 FOTO-PLATZHALTER: Selbst gezeichneter B+-Baum mit 3 Ebenen, Blätter durch Pfeile verkettet, ein Suchweg rot markiert
-> ![](bilder/04-datenverwaltung-bplus-baum.png)
-
-> 📷 FOTO-PLATZHALTER: Tafelbild Einfügen 10–60 mit Splits (wie oben)
-> ![](bilder/04-datenverwaltung-bbaum-split.png)
 
 ### 3.4 Hash-Map (≈ 3 min)
 
@@ -223,9 +191,6 @@ def hash_join(kunden, bestellungen):
 - **Cache**: Seitennummer → Seite im RAM [Allgemeinwissen].
 - **Laufende Transaktionen merken**: Transaktions-ID → Zustand/Sperren (📝 Stichwort aus matura-themen.md; wie genau ein bestimmtes DBMS das intern macht, habe ich nicht nachgeprüft).
 - 📝 Python-`dict` und `set` sind Hash-Maps – auch in deinem Code: `lagerbewegung_menge_dict = dict(lagerbewegung_menge)` in [reporting.py](../../assigment/lagerverwaltung-kiDra94/reporting.py).
-
-> 📷 FOTO-PLATZHALTER: Skizze Array mit 26 Plätzen A–Z, bei „A“ eine Liste Anton → Albert → Alina (Kollision), Ötzie bei „T“
-> ![](bilder/04-datenverwaltung-hashmap.png)
 
 ### 3.5 Caching & wann ein Index sinnvoll ist (≈ 2 min)
 

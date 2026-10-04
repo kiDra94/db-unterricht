@@ -76,9 +76,6 @@ classDiagram
 
 **Welche ORMs gibt es?** 📝 „Welche ORM es gibt. Prisma reicht aus.“ [Allgemeinwissen]: Prisma, TypeORM, Sequelize (JavaScript/TypeScript), SQLAlchemy, Django ORM (Python), Hibernate (Java), Entity Framework (C#/.NET).
 
-> 📷 FOTO-PLATZHALTER: Handgezeichnetes UML-Klassendiagramm: links Klassen Member/Course/Assigment, rechts die Tabellen, Pfeile „Mapping“, oben schema.prisma → generate → PrismaClient
-> ![](bilder/07-orm-klassendiagramm-mapping.png)
-
 ### 3.2 Prisma: Schema und Werkzeuge (≈ 3 min)
 
 📝 Unterricht ab 24.11.2025 ([orm-prisma/npm-von-null-auf.txt](../orm-prisma/npm-von-null-auf.txt), Commits `450dcf1`, `7b38c43`).
@@ -181,9 +178,6 @@ CREATE TABLE "Datenblatt" (
 | Vorteile | Schema-Änderungen versioniert (Migrationen im Git), auf jedem Rechner reproduzierbar, Entwickler bleiben in einer Sprache | bestehende DB bleibt unangetastet, DB-Spezialisten können Trigger/Views/Constraints direkt in SQL bauen |
 | Nachteile | DB-Spezialitäten (Trigger, Views, komplexe CHECKs) kann das Schema nicht immer ausdrücken; Migration kann Daten löschen (siehe Warnung oben) | nach jeder DB-Änderung erneut `db pull` + `generate`; Namen aus der DB (z. B. `test`) muss man im Schema eventuell selbst schöner machen |
 
-> 📷 FOTO-PLATZHALTER: Zwei Pfeile nebeneinander: Code-first schema.prisma → migrate dev → DB; Database-first DB → db pull → schema.prisma → generate → Client
-> ![](bilder/07-orm-code-first-db-first.png)
-
 ### 3.4 Wie sieht eine Abfrage mit Prisma aus? (≈ 3 min)
 
 📝 matura-themen.md: „Frage, wie eine Abfrage in einem ORM ausschaut … Die Methoden vom ORM sollte man grob auswendig wissen, die grundlegenden sollte man schon wissen (wie find usw.).“
@@ -258,6 +252,60 @@ const kurse = await prisma.course.findMany({
 - Zusätzliche Schicht → etwas langsamer, erzeugtes SQL nicht immer optimal.
 - Komplexe Abfragen (viele JOINs, Gruppierungen, DB-Spezialitäten) sind umständlich → man braucht trotzdem SQL (Prisma hat dafür Raw-Queries wie `$queryRaw`, 🌐 Prisma Client API Reference).
 - Lernaufwand, „Magie“: Man sieht nicht sofort, welches SQL läuft (deshalb `log: ['query']`).
+
+**Konkretes Beispiel zu „komplexe Abfragen“** – mit deinem Schema `Course` / `Assigment`. Ich habe alles mit Prisma 6.19 (wie im Unterricht) auf einer Kopie deines Projekts getestet.
+
+Frage: **Welche Kurse haben mindestens 2 Aufgaben? Zeige Kursname und Anzahl, die meisten zuerst.**
+
+In **SQL** ist das eine einzige, gut lesbare Abfrage (JOIN + GROUP BY + HAVING, Themenkorb 3):
+```sql
+SELECT c.name AS kurs, COUNT(a.id) AS anzahl
+FROM Course c
+JOIN Assigment a ON a.course_id = c.id
+GROUP BY c.id, c.name
+HAVING COUNT(a.id) >= 2
+ORDER BY anzahl DESC;
+```
+
+In **Prisma** gibt es dafür keinen direkten Weg:
+
+*Versuch 1 – `groupBy`:* Gruppieren und `having` kann Prisma zwar, aber nur über die Spalten **einer** Tabelle. Den Kursnamen aus der anderen Tabelle kann man nicht mitladen, ein `include` im `groupBy` liefert einen Fehler. Man braucht also eine **zweite Abfrage** und muss die Ergebnisse im JavaScript selbst zusammenbauen:
+```javascript
+const gruppen = await prisma.assigment.groupBy({
+  by: ['course_id'],
+  _count: { id: true },
+  having: { id: { _count: { gte: 2 } } },
+  orderBy: { _count: { id: 'desc' } },
+});
+// Ergebnis: [{ course_id: 1, _count: { id: 3 } }, ...]  → nur die id, kein Name!
+
+const kurse = await prisma.course.findMany({
+  where: { id: { in: gruppen.map(g => g.course_id) } },
+});
+const ergebnis = gruppen.map(g => ({
+  kurs: kurse.find(k => k.id === g.course_id).name,   // JOIN "von Hand"
+  anzahl: g._count.id,
+}));
+```
+
+*Versuch 2 – `_count` über die Relation:* Damit bekommt man den Namen, aber auf die Anzahl kann man in Prisma **nicht filtern** (kein `HAVING`). Also lädt man **alle** Kurse aus der DB und filtert erst im Programm:
+```javascript
+const alle = await prisma.course.findMany({
+  include: { _count: { select: { assigments: true } } },
+  orderBy: { assigments: { _count: 'desc' } },
+});
+const ergebnis = alle.filter(k => k._count.assigments >= 2);   // Filter im JS statt in der DB
+```
+
+*Ausweg – Raw-SQL:* `prisma.$queryRaw` mit genau dem SQL von oben. Das funktioniert, aber dann schreibt man ja doch wieder SQL.
+
+**Warum ist das ein Problem?**
+- **Mehr Code, schlechter lesbar:** Die SQL-Abfrage hat 6 Zeilen. In Prisma braucht man zwei Abfragen und baut den JOIN selbst im JavaScript zusammen.
+- **Langsamer bei vielen Daten:** Bei Versuch 1 gibt es **zwei** Anfragen an die DB statt einer. Bei Versuch 2 werden **alle** Kurse übertragen, auch die, die man gar nicht braucht. Bei 3 Kursen ist das egal, bei 100 000 nicht mehr.
+- **Erzeugtes SQL unübersichtlich:** Mit `log: ['query']` sieht man, dass Prisma bei Versuch 2 ein SQL mit **zwei Unterabfragen und zwei LEFT JOINs** erzeugt. Von Hand hätte man nur einen JOIN geschrieben.
+- **Raw-SQL verliert die Vorteile des ORM:** Es gibt keine Typsicherheit und keine Prüfung der Feldnamen mehr, und bei einem DB-Wechsel muss man das SQL eventuell anpassen. Beim Test kam `COUNT` außerdem als `3n` zurück, also als **BigInt** statt als normale Zahl. Das ist so eine Überraschung, die man ohne ORM nicht hätte.
+
+Merksatz: Für einfaches CRUD ist das ORM super. Sobald man **auswerten** will (gruppieren, nach Gruppen filtern, über mehrere Tabellen rechnen), ist SQL meistens kürzer und schneller.
 
 **Ab wann lohnt es sich?** Bei einem kleinen Skript mit einer Tabelle reicht `sqlite3` mit SQL. Sobald es mehrere Tabellen mit Relationen gibt, mehrere Entwickler arbeiten und sich das Schema weiterentwickelt (Migrationen), zahlt sich ein ORM aus – so wie im Classroom-Projekt mit Member, Course, Assigment und NestJS.
 

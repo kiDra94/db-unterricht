@@ -68,7 +68,7 @@ GRANT SELECT ON kunden_uebersicht TO frontend;   -- darf nur die View lesen
 | `CROSS JOIN` | kartesisches Produkt, jede mit jeder |
 | Self Join | Tabelle mit sich selbst (mit Aliasen) |
 
-🌐 SQLite kann `RIGHT` und `FULL OUTER JOIN` erst seit **Version 3.39.0 (2022)** ([Release-Log](https://sqlite.org/releaselog/3_39_0.html)). Vorher hätte man LEFT JOIN mit vertauschten Tabellen bzw. LEFT JOIN + UNION gebraucht.
+![join](bilder/03-join.jpg)
 
 **Beispiel 1 – LEFT JOIN** (📝 [Uebung.md](../../../../1-2/db/TIL-DB/geruest/uebung-fuer-test/Uebung.md), Aufgabe 2: „Liste aller Bewerber mit ihrem Bewerbungsstatus“):
 ```sql
@@ -92,10 +92,91 @@ LEFT JOIN abteilung eltern ON kind.parent_id = eltern.id;
 -- IT → R&D, HW → R&D, R&D → NULL
 ```
 
-**Beispiel 4 – viele JOINs + GROUP BY** (📝 [1-2/db/b-tree/README.md](../../../../1-2/db/b-tree/README.md), DBeaver-Sample-DB): InvoiceLine → Track → Album → Artist und Genre, gruppiert nach Artist und Genre, mit `SUM(IL.UnitPrice * IL.Quantity)`. Gut als Beispiel, dass JOIN und Aggregation zusammenspielen.
+**Beispiel 4 – JOINs + GROUP BY (Schule)** [Allgemeinwissen, Beispiel selbst gebaut und in SQLite getestet]
 
-> 📷 FOTO-PLATZHALTER: Die JOIN-Grafik mit zwei überlappenden Kreisen (INNER, LEFT, RIGHT, FULL) – selbst gezeichnet
-> ![](bilder/03-sql-join-arten.png)
+Frage: **Wie ist der Notendurchschnitt pro Fach in der Klasse 3AHIF?**
+
+Drei Tabellen. `note` ist die Zwischentabelle, die Schüler und Fach verbindet (n:m, wie `grades` in deiner [school.sqlite](../../../../1-2/db/anh-test/school.sqlite)):
+
+```mermaid
+erDiagram
+    schueler {
+        INTEGER id PK
+        TEXT name
+        TEXT klasse
+    }
+    fach {
+        INTEGER id PK
+        TEXT name
+    }
+    note {
+        INTEGER id PK
+        INTEGER schueler_id FK
+        INTEGER fach_id FK
+        INTEGER note
+    }
+    schueler ||--o{ note : "bekommt"
+    fach ||--o{ note : "wird benotet in"
+```
+
+Testdaten:
+
+schueler:
+
+| id | name | klasse |
+|---|---|---|
+| 1 | Anna | 3AHIF |
+| 2 | Ben | 3AHIF |
+| 3 | Clara | 3BHIF |
+
+fach:
+
+| id | name |
+|---|---|
+| 1 | Mathe |
+| 2 | Englisch |
+| 3 | DBI |
+
+note (Schüler × Fach):
+
+| | Mathe | Englisch | DBI |
+|---|---|---|---|
+| Anna | 1 | 2 | 1 |
+| Ben | 4 | 3 | 2 |
+| Clara | 2 | – | 1 |
+
+(In der echten Tabelle `note` ist jede dieser Noten eine eigene Zeile mit `schueler_id` und `fach_id`.)
+
+```sql
+SELECT f.name       AS fach,
+       COUNT(*)     AS anzahl_noten,
+       AVG(n.note)  AS durchschnitt,
+       MIN(n.note)  AS beste_note
+FROM note n
+JOIN schueler s ON n.schueler_id = s.id   -- wer hat die Note?
+JOIN fach f     ON n.fach_id = f.id       -- in welchem Fach?
+WHERE s.klasse = '3AHIF'                  -- nur diese Klasse (Clara fällt raus)
+GROUP BY f.name                           -- eine Ergebniszeile pro Fach
+ORDER BY durchschnitt ASC, fach;          -- bestes Fach zuerst
+```
+
+Ergebnis:
+
+| fach | anzahl_noten | durchschnitt | beste_note |
+|---|---|---|---|
+| DBI | 2 | 1.5 | 1 |
+| Englisch | 2 | 2.5 | 2 |
+| Mathe | 2 | 2.5 | 1 |
+
+So liest man die Abfrage:
+- **JOINs:** Man startet bei `note`, weil dort die Noten stehen. Über die zwei Fremdschlüssel holt man sich den Schüler und das Fach dazu.
+- **WHERE:** filtert **vor** dem Gruppieren die einzelnen Zeilen. Clara geht in die 3BHIF, ihre Noten zählen deshalb nicht mit.
+- **GROUP BY:** Alle Noten vom gleichen Fach kommen in eine Gruppe. `COUNT`, `AVG` und `MIN` rechnen dann pro Fach.
+- **ORDER BY:** sortiert nach dem Durchschnitt. Englisch und Mathe haben beide 2.5, dann entscheidet der Name.
+
+📝 Eine größere Version mit 6 Tabellen (Künstler, Album, Lied, Genre, Rechnung) hast du in [1-2/db/b-tree/README.md](../../../../1-2/db/b-tree/README.md) für die DBeaver-Sample-DB geschrieben. Das Prinzip ist dasselbe.
+
+
 
 ### 3.3 Gruppieren & Aggregieren: GROUP BY, HAVING, ORDER BY (≈ 2 min)
 
@@ -145,9 +226,6 @@ ORDER BY verkauft DESC;
 **Reihenfolge, in der die DB das abarbeitet** [Allgemeinwissen] – gut zum Aufzeichnen:
 `FROM`/`JOIN` → `WHERE` → `GROUP BY` → `HAVING` → `SELECT` → `ORDER BY` → `LIMIT`.
 Daraus sieht man, warum `WHERE` noch nichts von den Gruppen weiß.
-
-> 📷 FOTO-PLATZHALTER: Skizze: Tabelle bestellung → Zeilen nach kunde_id eingefärbt → pro Farbe eine Ergebniszeile mit SUM; daneben der Ablauf FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY
-> ![](bilder/03-sql-group-by.png)
 
 ### 3.4 Subselects (≈ 2 min)
 
@@ -225,10 +303,7 @@ VALUES ('Ben Beispiel', 'Digitale Welten', 10);
 ```
 Ich habe dein Skript mit den Testdaten durchlaufen lassen: Der INSERT legt eine Ausleihe mit Rückgabedatum heute + 10 Tage an.
 
-> 📷 FOTO-PLATZHALTER: Skizze: Frontend schreibt in die View → INSTEAD-OF-Trigger → echte Tabelle ausleihe
-> ![](bilder/03-sql-view-instead-of.png)
-
-### 3.6 Transaktionen & ACID (≈ 3 min)
+### 3.6 Transaktionen (≈ 3 min)
 
 📝 matura-themen.md: „Sie sind wichtig, wenn man mehr als ein SQL-Statement hat, welche semantisch voneinander abhängig sind, also aus Sicht des Business-Cases müssen sie gemeinsam ablaufen. Also alle diese müssen gemeinsam passieren oder keine.“
 📝 Unterricht 29.09.2025, [transaktion/bank.sql](../transaktion/bank.sql); Aufgabe Lagerverwaltung (Commits 04.–06.10.2025).
@@ -262,17 +337,6 @@ ROLLBACK TO vor_zahlung;     -- nur die Zahlung zurück, Warenkorb bleibt
 COMMIT;
 ```
 📝 bank.sql: „wird in der Praxis aber selten benutzt, da wir solche Sachen oft im Code schon lösen.“
-
-**Im Code – dein Kontextmanager** (📝 [ev.py](../../assigment/lagerverwaltung-kiDra94/ev.py)): Kein Fehler → `COMMIT`, Fehler (z. B. CHECK-Verletzung bei zu wenig Lagerbestand oder überschrittenem Kreditlimit) → `ROLLBACK`. Ausführlicher in [05-realisierung-von-db-anwendungen.md](05-realisierung-von-db-anwendungen.md).
-
-**ACID** (📝 matura-themen.md: „wissen was es ist, wenn wir es selber irgendwo erwähnen, wird nicht explizit nachgefragt!“) – 🌐 [Wikipedia – ACID](https://de.wikipedia.org/wiki/ACID):
-- **A – Atomarität**: „entweder ganz oder gar nicht“ (📝 „eine Transaktion muss atomar sein“).
-- **C – Konsistenz**: Nach der Transaktion ist die DB wieder in einem gültigen Zustand, alle Integritätsbedingungen (Constraints) sind erfüllt.
-- **I – Isolation**: Parallel laufende Transaktionen beeinflussen sich nicht – meist über Sperren (→ „database is locked“).
-- **D – Dauerhaftigkeit**: Nach dem COMMIT sind die Daten dauerhaft gespeichert, auch nach einem Absturz (→ Journal/WAL).
-
-> 📷 FOTO-PLATZHALTER: Zeitstrahl BEGIN → UPDATE Bob → UPDATE Charlie → COMMIT, darunter Variante mit Stromausfall → ROLLBACK
-> ![](bilder/03-sql-transaktion-ueberweisung.png)
 
 ---
 

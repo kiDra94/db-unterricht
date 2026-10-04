@@ -71,9 +71,6 @@ bestellung_id = cursor.fetchone()[0]
 
 ✅ **Korrigiert am 02.10.2026:** In Uebung.md und main.py stand der Platzhalter als `{:statement}` bzw. `{:subject}`. Jetzt steht dort `:statement` / `:subject`. Richtig ist `:name` (benannter Platzhalter) oder `?` (🌐 [Python-Doku sqlite3](https://docs.python.org/3/library/sqlite3.html): „question marks (qmark style) or named placeholders (named style)“). Auch der Schlüssel `'statment'` heißt jetzt `'statement'`, passend zum SQL.
 
-> 📷 FOTO-PLATZHALTER: Skizze Programm → Connection → Cursor → Tabelle, Cursor als Pfeil auf Zeile 1, fetchone() schiebt ihn weiter
-> ![](bilder/05-anwendung-cursor.png)
-
 ### 3.2 Ressourcen nicht vergessen zu schließen (≈ 2,5 min)
 
 📝 matura-themen.md: „Wie mach ich es, damit ich eine Ressource nicht vergesse zu schließen (with open in Python).“
@@ -261,6 +258,23 @@ export class MemberService {
 }
 ```
 
+**Dasselbe mit FastAPI + SQLAlchemy** [Allgemeinwissen, 🌐 [fastapi.tiangolo.com – SQL Databases](https://fastapi.tiangolo.com/tutorial/sql-databases/)] – nur ein GET. `Member` ist das SQLAlchemy-Modell, `get_db` liefert eine Session:
+
+```python
+# Service – nur die Datenbank (SQLAlchemy)
+def find_member(db: Session, id: int):
+    return db.get(Member, id)          # SELECT * FROM member WHERE id = ?
+
+
+# Controller – nur HTTP
+@app.get("/member/{id}")
+def get_member(id: int, db: Session = Depends(get_db)):
+    member = find_member(db, id)       # ruft den Service auf
+    if member is None:
+        raise HTTPException(status_code=404, detail="Member not found")
+    return {"id": member.id, "name": member.name, "email": member.email}
+```
+
 **Aufbau einer NestJS-Anwendung** (📝 api/mitschrift.md):
 - `main.ts`: `bootstrap()` erzeugt die App und startet den Server.
 - `app.module.ts`: **Modul** bündelt Controller und Provider (Services).
@@ -276,8 +290,6 @@ export class MemberService {
 - **Controller**: wird über Benutzerinteraktionen informiert, wertet sie aus, passt an → NestJS-Controller.
 - Vorteil: Teile können getrennt geändert werden.
 
-> 📷 FOTO-PLATZHALTER: Schichtenbild Client → Controller → Service → PrismaService → SQLite, daneben die MVC-Zuordnung
-> ![](bilder/05-anwendung-controller-service.png)
 
 ---
 
@@ -341,4 +353,5 @@ Die Klasse erzeugt ihre Abhängigkeiten nicht selbst mit `new`, sondern bekommt 
 - https://docs.python.org/3/library/sqlite3.html
 - https://www.sqlite.org/rescode.html
 - https://docs.nestjs.com/providers
+- https://fastapi.tiangolo.com/tutorial/sql-databases/
 - https://de.wikipedia.org/wiki/Model_View_Controller

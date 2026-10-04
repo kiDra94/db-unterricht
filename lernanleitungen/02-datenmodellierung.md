@@ -34,6 +34,8 @@
 📝 matura-themen.md: „Notationen müssen wir nicht wissen, Kardinalitäten sind 1-1, 1-n, n-m Beziehungen usw. **Schnell eine mini DB entwerfen und erklären, warum was gemacht worden ist.**“
 📝 teststoff-1.md: Beim 1. Test war „ERD erstellen und Abweichungen argumentieren“ dabei, ERD muss „leserlich und normgerecht“ sein.
 
+![erd](bilder/2-Erd.svg.webp)
+
 **Begriffe** (🌐 [Wikipedia – ER-Modell](https://de.wikipedia.org/wiki/Entity-Relationship-Modell)):
 - **Entität**: ein konkretes Ding (die Schülerin Anna).
 - **Entitätstyp**: die Art von Ding (Schüler) → wird zur **Tabelle**.
@@ -65,9 +67,6 @@ CREATE TABLE subject_students (
 **Begründen können** (das will der Prüfer hören): Warum die Zwischentabelle? Weil eine Spalte nur **einen** Wert haben darf (1NF). Eine Liste von Fächern in der Schüler-Tabelle wäre nicht atomar.
 
 **Zweites Beispiel aus deinem Prisma-Test** ([2-test-kiDra94/README.md](../../2-test-kiDra94/README.md), Aufgabe 2): Artikel – Datenblatt als 1:n, weil es „mehrere Datenblätter geben kann (technische, Sicherheit, unterschiedliche Sprachen usw.)“ und wegen „Skalierbarkeit“.
-
-> 📷 FOTO-PLATZHALTER: Handgezeichnetes ERD der Schul-DB (students, subjects, teachers, grades, Zwischentabellen) mit Kardinalitäten an den Linien
-> ![](bilder/02-modellierung-erd-schule.png)
 
 ### 3.2 Keys (≈ 3 min)
 
@@ -106,8 +105,6 @@ CREATE TABLE bestellung (
 - **Nein**: `kunde` → `bestellung`. Löscht man einen Kunden, wären alle Bestellungen/Umsätze weg – die will man für die Buchhaltung behalten. Hier lieber `RESTRICT` (oder den Kunden nur als inaktiv markieren).
 - 📝 In der **Bibliothek-Aufgabe** (Anforderung 4: „Wenn ein Nutzer gelöscht wird, sollen gleichzeitig alle zugehörigen offenen Ausleihen, Mahnungen … entfernt werden“) hast du das mit `AFTER DELETE`-Triggern gelöst ([skript.sql](../../assigment/bibliothekssystem-kiDra94/skript.sql)). Mit `ON DELETE CASCADE` am FK ginge das Löschen auch ohne Trigger; den Log-Eintrag braucht man trotzdem als Trigger.
 
-⚠️ **SQLite-Falle:** FKs werden in SQLite **standardmäßig nicht geprüft**. Man muss pro Verbindung `PRAGMA foreign_keys = ON;` ausführen (🌐 [sqlite.org/foreignkeys.html](https://www.sqlite.org/foreignkeys.html), [pragma.html](https://www.sqlite.org/pragma.html)). ✅ Am 02.10.2026 habe ich die Zeile oben in constraint-trigger/skript.sql, im Bibliothek-skript.sql, in aufgabe.sql und main.py der Lagerverwaltung eingefügt. Nachgetestet: Alles läuft weiter, und jetzt kommt z. B. bei einer Ausleihe für einen Nutzer, den es nicht gibt, `FOREIGN KEY constraint failed`.
-
 ### 3.3 Normalformen bis zur 3. Normalform (≈ 4 min)
 
 📝 matura-themen.md: „Dazu gibt es sicher eine Frage. Was sind Normalformen, wozu ich sie brauche. Schau dir die Wikipedia-Seite dazu an. Bis inklusive 3. Normalform.“
@@ -125,6 +122,17 @@ CREATE TABLE bestellung (
 - **1NF**: „Jedes Attribut der Relation muss einen atomaren Wertebereich haben, und die Relation muss frei von Wiederholungsgruppen sein.“
 - **2NF**: 1NF und „Kein Nichtprimärattribut darf funktional von einer echten Teilmenge eines Schlüsselkandidaten abhängen.“
 - **3NF**: 2NF und „keine funktionalen Abhängigkeiten der Nichtschlüssel-Attribute untereinander“ (= keine **transitiven** Abhängigkeiten).
+
+**Ganz einfach erklärt** (ohne Fachbegriffe) [Allgemeinwissen]:
+
+| Normalform | Einfache Regel | Alltagsbeispiel |
+|---|---|---|
+| **Grundidee** | Jede Information soll nur **an einer Stelle** stehen. Dann muss man sie nur einmal ändern und kann sich nicht widersprechen. | Deine Handynummer steht in deinem Handy nur bei deinem Kontakt und nicht bei jeder einzelnen Nachricht dabei. |
+| **1NF** | In einer Zelle steht **nur ein einziger Wert**. Es gibt keine Aufzählungen und keine zwei Infos, die zusammengeklebt sind. | In der Klassenliste steht „Hobbys: Fußball, Gitarre, Zocken“ in einem Feld → falsch. Richtig ist: Jedes Hobby kommt in eine eigene Zeile. Auch „Anastacia – Not That Kind“ sind zwei Infos (Sängerin und Album), die man trennen muss. |
+| **2NF** | Wenn man eine Zeile nur mit **zwei Spalten zusammen** eindeutig findet, darf keine andere Spalte nur zu **einer** der beiden gehören. Sonst muss diese Spalte in eine eigene Tabelle. | Eine Liedliste wird mit „CD + Liednummer“ durchnummeriert. Der Albumname gehört aber nur zur CD und nicht zum einzelnen Lied. Deshalb steht er bei jedem Lied der CD noch einmal da → er kommt in eine eigene CD-Tabelle. |
+| **3NF** | Eine Spalte darf nicht von einer **anderen normalen Spalte** abhängen, sondern nur vom Schlüssel. Wenn etwas eigentlich „zu etwas anderem“ gehört, kommt es in eine eigene Tabelle. | Das Gründungsjahr einer Band gehört **zur Band** und nicht zur CD. Steht es in der CD-Tabelle, wiederholt es sich bei jeder CD der Band → es kommt in eine eigene Künstler-Tabelle. |
+
+Merksatz [Allgemeinwissen, bekannter englischer Spruch]: Jede Spalte muss vom **Schlüssel** abhängen (1NF), vom **ganzen Schlüssel** (2NF) und **nur vom Schlüssel** (3NF).
 
 **Fachbegriff funktionale Abhängigkeit** [Allgemeinwissen]: A → B heißt „kenne ich A, kenne ich B“. Beispiel: `artikel_id → artikel_name`.
 
@@ -159,6 +167,87 @@ Ergebnis: `kunde`, `bestellung(kunde_id)`, `bestellposition`, `artikel` – gena
 
 Kleiner Feinpunkt [Allgemeinwissen]: `einzelpreis` in `bestellposition` ist **keine** Verletzung der 2NF, obwohl `artikel.verkaufspreis` existiert – es ist der Preis **zum Zeitpunkt der Bestellung** und kann sich vom aktuellen Preis unterscheiden.
 
+#### Das Beispiel von Wikipedia (CD_Lied)
+
+🌐 Alle Tabellen und Erklärungen in diesem Abschnitt sind aus [Wikipedia – Normalisierung (Datenbank)](https://de.wikipedia.org/wiki/Normalisierung_(Datenbank)) übernommen (Stand 04.10.2026). Schlüsselspalten sind *kursiv* geschrieben.
+
+**1NF verletzt:**
+
+| *CD_ID* | Album | Gründungsjahr | Erscheinungsjahr | Titelliste |
+|---|---|---|---|---|
+| 4711 | Anastacia – Not That Kind | 1999 | 2000 | {1. Not That Kind, 2. I’m Outta Love, 3. Cowboys & Kisses} |
+| 4712 | Pink Floyd – Wish You Were Here | 1965 | 1975 | {1. Shine On You Crazy Diamond (Pts. I–V)} |
+| 4713 | Anastacia – I’m Outta Love | 1999 | 2000 | {1. I’m Outta Love} |
+
+- Das Feld **Album** enthält zwei Dinge: Interpret und Albumtitel → nicht atomar. Nach Albumtitel sortieren geht so nicht.
+- Das Feld **Titelliste** enthält eine Menge von Titeln → Wiederholungsgruppe. Die Titel kann man nur alle zusammen oder gar nicht anzeigen.
+
+**Lösung 1NF:** Album wird in *Albumtitel* + *Interpret* aufgeteilt, Titelliste in *Track* + *Titel*, und jeder Titel bekommt eine eigene Zeile.
+
+| *CD_ID* | Albumtitel | Interpret | Gründungsjahr | Erscheinungsjahr | *Track* | Titel |
+|---|---|---|---|---|---|---|
+| 4711 | Not That Kind | Anastacia | 1999 | 2000 | 1 | Not That Kind |
+| 4711 | Not That Kind | Anastacia | 1999 | 2000 | 2 | I’m Outta Love |
+| 4711 | Not That Kind | Anastacia | 1999 | 2000 | 3 | Cowboys & Kisses |
+| 4712 | Wish You Were Here | Pink Floyd | 1965 | 1975 | 1 | Shine On You Crazy Diamond (Pts. I–V) |
+| 4713 | I’m Outta Love | Anastacia | 1999 | 2000 | 1 | I’m Outta Love |
+
+Der Primärschlüssel ist jetzt zusammengesetzt aus **(CD_ID, Track)** → Relation ist in 1NF.
+
+**2NF verletzt** (das ist genau die Tabelle von oben):
+- Albumtitel, Interpret, Gründungsjahr und Erscheinungsjahr hängen **nur von CD_ID** ab, nicht von Track → Abhängigkeit von einem **Teil** des Schlüssels.
+- Folge: „Not That Kind / Anastacia / 1999 / 2000“ steht dreimal da (Redundanz).
+- **Update-Anomalie**: Ändert man den Albumtitel nur in der Zeile von Track 1 auf „I Don’t Mind“, stehen bei Track 2 und 3 weiterhin „Not That Kind“ → die Daten passen nicht mehr zusammen (Dateninkonsistenz).
+
+**Lösung 2NF:** Aufteilen in **CD** (alles, was nur von CD_ID abhängt) und **Lied** (alles, was von CD_ID **und** Track abhängt).
+
+CD:
+
+| *CD_ID* | Albumtitel | Interpret | Gründungsjahr | Erscheinungsjahr |
+|---|---|---|---|---|
+| 4711 | Not That Kind | Anastacia | 1999 | 2000 |
+| 4712 | Wish You Were Here | Pink Floyd | 1965 | 1975 |
+| 4713 | I’m Outta Love | Anastacia | 1999 | 2000 |
+
+Lied:
+
+| *CD_ID* | *Track* | Titel |
+|---|---|---|
+| 4711 | 1 | Not That Kind |
+| 4711 | 2 | I’m Outta Love |
+| 4711 | 3 | Cowboys & Kisses |
+| 4712 | 1 | Shine On You Crazy Diamond (Pts. I–V) |
+| 4713 | 1 | I’m Outta Love |
+
+`Lied.CD_ID` ist ein **Fremdschlüssel** auf `CD.CD_ID` und gleichzeitig Teil des zusammengesetzten PK (CD_ID, Track).
+
+**3NF verletzt** (Tabelle CD von oben):
+- `CD_ID → Interpret` und `Interpret → Gründungsjahr`. Das Gründungsjahr hängt also nicht direkt, sondern **transitiv** (über den Interpreten) von CD_ID ab.
+- Folge: Bei Anastacia steht „1999“ zweimal. Jede neue CD eines bekannten Interpreten speichert das Gründungsjahr noch einmal.
+
+**Lösung 3NF:** Interpret + Gründungsjahr in eine eigene Tabelle **Künstler** auslagern. Weil ein Interpretenname nicht weltweit eindeutig sein muss, bekommt Künstler laut Wikipedia eine künstliche **Interpret_ID** (= Surrogatschlüssel), die in CD als Fremdschlüssel steht:
+
+CD:
+
+| *CD_ID* | Albumtitel | Interpret_ID | Erscheinungsjahr |
+|---|---|---|---|
+| 4711 | Not That Kind | 311 | 2000 |
+| 4712 | Wish You Were Here | 312 | 1975 |
+| 4713 | I’m Outta Love | 311 | 2000 |
+
+Künstler:
+
+| *Interpret_ID* | Interpret | Gründungsjahr |
+|---|---|---|
+| 311 | Anastacia | 1999 |
+| 312 | Pink Floyd | 1965 |
+
+Die Tabelle **Lied** bleibt bei der 3NF unverändert.
+
+**Ergebnis:** 3 Tabellen – `CD`, `Lied`, `Kuenstler`. Das ist dasselbe Muster wie bei deiner Lagerverwaltung: Liste aufteilen (1NF) → Teilabhängigkeit raus (2NF) → transitive Abhängigkeit raus (3NF).
+
+🌐 **Merkregel** (Wikipedia): „Ist die Relation in 1. Normalform und besteht der Primärschlüssel aus nur einem Attribut und gibt es keinen anderen Schlüssel, der aus mehreren Attributen besteht, so liegt automatisch die 2. Normalform vor.“
+
 **5 Stichworte für den Test-Stil (teststoff-1):**
 1. **Redundanz** – jede Information nur einmal speichern.
 2. **Anomalien** – Einfüge-, Änderungs-, Löschanomalie verhindern.
@@ -167,9 +256,6 @@ Kleiner Feinpunkt [Allgemeinwissen]: `einzelpreis` in `bestellposition` ist **ke
 5. **Nur vom Schlüssel (3NF)** – keine Abhängigkeit zwischen Nichtschlüsselspalten.
 
 **Denormalisierung** (🌐 Wikipedia): bewusst auf Normalisierung verzichten, „um die Verarbeitungsgeschwindigkeit zu erhöhen“, z. B. im Data Warehouse (Sternschema). Grund: weniger JOINs.
-
-> 📷 FOTO-PLATZHALTER: Tafelbild: unnormalisierte Bestellungstabelle → 1NF → 2NF → 3NF mit Pfeilen
-> ![](bilder/02-modellierung-normalformen.png)
 
 ### 3.4 Constraints & Trigger (≈ 3 min)
 
@@ -218,9 +304,6 @@ Weitere Beispiele aus deinen Aufgaben:
 
 ✅ **Zur Rekursion beim Budget-Beispiel** (in der Mitschrift am 02.10.2026 ergänzt): Dort steht „da er sich selber immer ändert, kommen wir in eine Rekursion“. Dein Ergebnis zeigt aber nur IT 4000 und HW 6000, also keine Endlosschleife. Grund: In SQLite sind rekursive Trigger **standardmäßig ausgeschaltet** (`PRAGMA recursive_triggers`, Default OFF – 🌐 [sqlite.org/pragma.html](https://www.sqlite.org/pragma.html)). Ich habe das nachgetestet: Mit einer Enkel-Abteilung unter IT wird diese bei OFF **nicht** verdoppelt; erst mit `PRAGMA recursive_triggers = ON` läuft der Trigger weiter nach unten. Die Gefahr ist also real, SQLite schützt dich nur standardmäßig davor.
 
-> 📷 FOTO-PLATZHALTER: Skizze Abteilungsbaum R&D → IT, HW mit Budgets vorher/nachher und Pfeil „Trigger ruft sich selbst auf“
-> ![](bilder/02-modellierung-trigger-rekursion.png)
-
 ### 3.5 Vererbung (≈ 2 min)
 
 📝 matura-themen.md: „Wir verstehen was sie ist aus POS, in DB ist sie [schlecht], aber man braucht sie hin und wieder.“
@@ -236,6 +319,18 @@ flowchart TD
 
 **1. Single Table Inheritance (STI)** – alles in eine Tabelle.
 
+```mermaid
+erDiagram
+    personen {
+        INTEGER id PK
+        TEXT typ "Diskriminator: lehrer oder schueler"
+        TEXT vorname
+        TEXT nachname
+        TEXT fach "nur Lehrer, sonst NULL"
+        TEXT klasse "nur Schueler, sonst NULL"
+    }
+```
+
 ```sql
 CREATE TABLE personen (
     id INTEGER PRIMARY KEY,
@@ -250,6 +345,25 @@ CREATE TABLE personen (
 - Vorteil [Allgemeinwissen]: kein JOIN, schnell.
 
 **2. Joined Table Inheritance (JTI)** – bei Fowler „Class Table Inheritance“, „one table for each class“. Basistabelle + je eine Tabelle pro Unterklasse, die **dieselbe id** hat.
+
+```mermaid
+erDiagram
+    personen {
+        INTEGER id PK
+        TEXT vorname
+        TEXT nachname
+    }
+    lehrer {
+        INTEGER id PK,FK "gleiche id wie in personen"
+        TEXT fach
+    }
+    schueler {
+        INTEGER id PK,FK "gleiche id wie in personen"
+        TEXT klasse
+    }
+    personen ||--o| lehrer : "ist ein"
+    personen ||--o| schueler : "ist ein"
+```
 - 📝 Vorteile: spart Speicher, übersichtlicher, Datentyp ist über die Tabelle klar, ein FK muss nur auf die richtige Tabelle zeigen (z. B. nur auf `lehrer`).
 - 📝 Nachteil: „mehr Arbeit bei CRUD, da ich JOINEN muss.“
 - 📝 **Dein Beispiel 1**: Prisma `Member` – `Teacher` – `Student` ([schema.prisma](../orm-prisma/npm-von-null-auf/prisma/schema.prisma)): `Teacher.id` ist gleichzeitig PK und FK auf `Member.id`.
@@ -257,8 +371,22 @@ CREATE TABLE personen (
 
 **3. Concrete Table Inheritance** – 📝 „nur Tabellen für Schüler und nur Tabellen für Lehrer“, keine Basistabelle; gemeinsame Spalten (vorname, nachname) stehen in beiden. Fowler: „one table per concrete class“. Nachteil [Allgemeinwissen]: „alle Personen“ abfragen braucht `UNION`, gemeinsame Spalten doppelt gepflegt.
 
-> 📷 FOTO-PLATZHALTER: Drei kleine Tabellen-Skizzen nebeneinander: STI (eine Tabelle mit NULLs), JTI (personen + lehrer + schueler), Concrete (lehrer + schueler)
-> ![](bilder/02-modellierung-vererbung.png)
+```mermaid
+erDiagram
+    lehrer {
+        INTEGER id PK
+        TEXT vorname "doppelt, auch in schueler"
+        TEXT nachname "doppelt, auch in schueler"
+        TEXT fach
+    }
+    schueler {
+        INTEGER id PK
+        TEXT vorname "doppelt, auch in lehrer"
+        TEXT nachname "doppelt, auch in lehrer"
+        TEXT klasse
+    }
+```
+
 
 ---
 
